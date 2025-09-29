@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+
+@theme {
+  --color-primary:#1C6EA4;
+  --color-secondary:#33A1E0;
+}
+
+@layer components{
+ li{
+  @apply cursor-pointer
+ }
+ 
+}
