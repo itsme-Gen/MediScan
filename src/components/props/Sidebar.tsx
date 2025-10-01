@@ -2,11 +2,13 @@ import Button from '@mui/material/Button'
 import { Bot, Home, Scan, Search, Stethoscope } from 'lucide-react'
 import React from 'react'
 import { NotepadText } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const dashboardProps:React.FC = () => {
+    const navigate = useNavigate()
   return (
     <div className='root-dashboard'>
-        <aside className='side-bar flex-shrink-0 h-screen w-70 border-r border-gray-200 p-5'>
+        <aside className='side-bar flex-shrink-0 h-screen w-70 fixed top-0 left-0  border-r border-gray-200 p-5'>
             <div className="logo flex flex-col items-center mb-4">
                 <Stethoscope className='bg-primary text-white rounded-xl h-15 w-15 p-3 mt-10'/>
                 <h1 className='text-xl text-primary font-semibold'>MediScan</h1>
@@ -14,11 +16,23 @@ const dashboardProps:React.FC = () => {
             </div>
             <div className="nav-links w-full">
                 <ul className='space-y'>
-                    <li className='flex flex-row gap-2 justify-start p-1 m-5'>
-                             <Home className='text-secondary w-5 h-5'/>
-                            <span className='text-secondary text-md'>Dashboard</span>
+                    <li className='flex flex-row gap-2 justify-start p-1 m-5'
+                    onClick={() =>{
+                        navigate("/dashboard")
+                        window.scrollTo({
+                            top:100
+                        })
+                    }}
+                    >
+                        <Home className='text-secondary w-5 h-5'/>
+                        <span className='text-secondary text-md'>Dashboard</span>
                     </li>
-                    <li className='flex flex-row gap-2 justify-start p-1 m-5'>
+                    <li className='flex flex-row gap-2 justify-start p-1 m-5'
+                        onClick={()=>{
+                        navigate("/scanid");
+                        window.scrollTo(0,0)
+                    }}
+                    >
                         <Scan className='text-secondary w-5 h-5'/>
                         <span className='text-secondary text-md'>Scan ID</span>
                     </li>

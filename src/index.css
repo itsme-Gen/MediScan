@@ -4,11 +4,34 @@
 @theme {
   --color-primary:#1C6EA4;
   --color-secondary:#33A1E0;
+
 }
 
-@layer components{
- li{
+
+@utility bg-card1-gradient{
+  background: linear-gradient(90deg, #1CB5E0 0%, #000851 100%); 
+}
+
+@utility bg-card2-gradient{
+  background: linear-gradient(90deg, #00bf8f 0%, #001510 100%); ;
+}
+  
+@utility bg-card3-gradient{
+  background: linear-gradient(90deg,#43cea2 0%,#185a9d 100%);
+}
+
+@utility bg-card4-gradient{
+  background: linear-gradient(90deg, #f2709c 0%, #ff9472 100%);
+}
+
+@utility hover-zoom{
+  @apply transition duration-300 ease-in-out hover:scale-105
+}
+
+@utility no-image-css{
+   @apply rounded-lg border-2 border-dashed border-gray-500 w-full h-50 flex flex-col justify-center items-center 
+}
+
+li{
   @apply cursor-pointer
- }
- 
 }

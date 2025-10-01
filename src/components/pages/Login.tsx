@@ -26,8 +26,8 @@ const handleChange = ((e: React.ChangeEvent<HTMLInputElement>)=>{
 const handleSubmit = ((e: React.FormEvent)=>{
     e.preventDefault();
       if (formData && formData.email && formData.password) {
-    onLogin();               // update App state
-    navigate("/dashboard");  // redirect to dashboard
+    onLogin(); 
+    navigate("/dashboard");
   } else {
     alert("Please fill in all fields");
   }
@@ -92,7 +92,7 @@ return (
             </div>
         </form>
 
-        <div className="right-side hidden lg:flex flex-col justify-evenly items-center w-[50%] h-screen">
+        <div className="right-side flex flex-col justify-evenly items-center w-[50%] h-screen">
             <div className='animation'>
                  <DotLottieReact
                     src='https://lottie.host/72a09b48-7e93-4265-9bd4-89913384ec26/dzMjMnI9Zt.lottie'
