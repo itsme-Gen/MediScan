@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import SignUp from './components/pages/SignUp';
 import Dashboard from "./components/pages/Dashboard"
 import ScanID from './components/pages/ScanID';
+import OCR from "./components/pages/OCR"
 
 const App: React.FC = () => {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -20,6 +21,7 @@ const App: React.FC = () => {
           )}
           <Route path="/signup" element={<SignUp />}/>
           <Route path='/scanid' element={<ScanID/>}/>
+          <Route path='/ocr' element ={<OCR/>}/>
         </Routes>
       </BrowserRouter>
     </div>

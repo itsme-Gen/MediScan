@@ -36,9 +36,9 @@ const handleSubmit = ((e: React.FormEvent)=>{
 
 const navigate = useNavigate()
 return (
-    <div className="root-div h-screen flex">
-        <form onSubmit={handleSubmit} className='sign_in w-[50%] h-screen flex justify-center items-center flex-col gap-4 items-center'>
-            <div className="sign_in_form w-[50%] flex flex-col gap-4">
+    <div className="root-div h-screen flex flex-row justify-between m-5 items-center">
+        <div className="form-container shadow-2xl shadow-black-400 rounded rounded-lg flex flex-cols justify-center items-center mx-10 w-[40%]">
+            <form onSubmit={handleSubmit} className='sign_in flex flex-col gap-2 w-full px-15 py-10'>
 
                 <div className="logo flex flex-col items-center mb-4">
                     <Stethoscope 
@@ -59,7 +59,6 @@ return (
                         variant='outlined'
                         fullWidth
                     />
-
                 <label htmlFor="password">Password</label>
                     <TextField
                         required
@@ -79,7 +78,6 @@ return (
                     type='submit'
                     >Sign In
                 </Button>
-
                 <div className="create_acccount flex justify-center">
                     <p className='text-secondary text-sm'>Don't have an account?</p>
                     <p className='text-primary text-sm ml-2 cursor-pointer font-semibold'
@@ -88,21 +86,19 @@ return (
                     }}
                     >Create Account</p>
                 </div>
+            </form>
+        </div>
 
-            </div>
-        </form>
-
-        <div className="right-side flex flex-col justify-evenly items-center w-[50%] h-screen">
+        <div className="right-side flex items-center justify-center">
             <div className='animation'>
                  <DotLottieReact
-                    src='https://lottie.host/72a09b48-7e93-4265-9bd4-89913384ec26/dzMjMnI9Zt.lottie'
+                    src='https://lottie.host/30123d7c-c25e-48a9-8b21-9fb0d355f476/deyQO8P1XK.lottie'
                     loop
                     autoplay
                     height={600}
                     width={600}
                 />
             </div>
-               
         </div>
 
         </div>

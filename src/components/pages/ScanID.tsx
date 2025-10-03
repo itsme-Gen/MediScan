@@ -3,10 +3,11 @@ import React, { useState } from 'react'
 import Appbar from '../props/Appbar'
 import Sidebar from "../props/Sidebar"
 import Greetings from '../props/Greetings'
+import { useNavigate } from 'react-router-dom'
 
 const ScanID = () => {
     const [preview , setPreview]  = useState<string | null>(null);
-
+    const navigate = useNavigate()
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
         const file = e.target.files?.[0]
         if(file){
@@ -27,11 +28,9 @@ const ScanID = () => {
                 icon={CircleUser}
             />
 
-            <div className="greetings">
-                <Greetings
-                firstName='Juan'
-                role='Dr.'
-                />
+            <div className="instruction text-center mt-5 p-5">
+                <h1 className='text-2xl font-bold text-primary'>Scan Patient ID</h1>
+                <p className='text-md text-gray-500'>Capture or upload a patient identification document for verification</p>
             </div>
 
             <div className="container grid grid-cols-2 gap-5 px-15 py-10">
@@ -102,18 +101,23 @@ const ScanID = () => {
                                 </div>
 
                                 <div className="button-container w-full flex items-center justify-center mt-5">
-                                    <button className='bg-primary text-white p-2 rounded-md w-full'>
+                                    <button className='bg-primary text-white p-2 rounded-md w-full'
+                                    onClick={() =>{
+                                        navigate("/ocr");
+                                        window.scrollTo(0,0)
+                                    }}
+                                    >
                                     Start OCR Processing
                                     </button>
                                 </div>
 
                                 <div className="tips bg-blue-100 mt-5 p-4 rounded-lg">
                                     <h3 className='text-md font-semibold'>Tips for best Result:</h3>
-                                    <ul className='list-disc list-inside text-sm'>
-                                        <li>Ensure good lighting on the ID</li>
-                                        <li>Keep the ID flat and straight</li>
-                                        <li>Avoid shadow and reflections</li>
-                                        <li>Make sure all text is clearly visible</li>
+                                    <ul className='list-disc list-inside'>
+                                        <li className='text-sm text-gray-500' >Ensure good lighting on the ID</li>
+                                        <li className='text-sm text-gray-500' >Keep the ID flat and straight</li>
+                                        <li className='text-sm text-gray-500' >Avoid shadow and reflections</li>
+                                        <li className='text-sm text-gray-500' >Make sure all text is clearly visible</li>
                                     </ul>
                                 </div>
                             </div>
@@ -132,10 +136,10 @@ const ScanID = () => {
                                  <div className="tips bg-blue-100 mt-5 p-4 rounded-lg">
                                     <h3 className='text-md font-semibold'>Tips for best Result:</h3>
                                     <ul className='list-disc list-inside text-sm'>
-                                        <li>Ensure good lighting on the ID</li>
-                                        <li>Keep the ID flat and straight</li>
-                                        <li>Avoid shadow and reflections</li>
-                                        <li>Make sure all text is clearly visible</li>
+                                        <li className='text-gray-500 text-sm'>Ensure good lighting on the ID</li>
+                                        <li className='text-gray-500 text-sm'>Keep the ID flat and straight</li>
+                                        <li className='text-gray-500 text-sm'>Avoid shadow and reflections</li>
+                                        <li className='text-gray-500 text-sm'>Make sure all text is clearly visible</li>
                                     </ul>
                                 </div>
                             </div>
