@@ -2,18 +2,22 @@ import { CircleUser, Image , Camera,ImageUp, Zap, Check ,CircleAlert} from 'luci
 import React, { useState } from 'react'
 import Appbar from '../props/Appbar'
 import Sidebar from "../props/Sidebar"
-import Greetings from '../props/Greetings'
 import { useNavigate } from 'react-router-dom'
 
 const ScanID = () => {
-    const [preview , setPreview]  = useState<string | null>(null);
+    const [image, setImage]  = useState<string | null>(null);
     const navigate = useNavigate()
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
         const file = e.target.files?.[0]
         if(file){
-            setPreview(URL.createObjectURL(file));
+            setImage(URL.createObjectURL(file));
         }
     }
+
+    const toOcr = (() =>{
+        navigate("/ocr",{state: {image}})
+    })
 
   return (
     <div className='scanId flex h-screen'>
@@ -44,9 +48,9 @@ const ScanID = () => {
 
                         <p className='text-sm text-gray-500 mb-5'>Use your device Camera or Upload an existing image ID</p>
 
-                        {preview ?(
+                        {image ?(
                             <div className="image-preview flex justify-center items center">
-                                <img src= {preview} alt="Image ID" />
+                                <img src= {image} alt="Image ID" />
                             </div>
                         ):(
                             <div className="no-image-css">
@@ -91,7 +95,7 @@ const ScanID = () => {
                         </div>
                         <p className='text-sm text-gray-500'>Extract data from the captured or upload image</p>
 
-                        {preview ?(
+                        {image?(
                             <div className="successfull-message flex flex-col">
                                 <div className="successfull-text bg-green-200 flex flex-col items-center justify-center mt-5 p-5 rounded-xl">
                                     <Check className='text-green-500 bg-green-300 rounded-full h-10 w-10'
@@ -102,10 +106,7 @@ const ScanID = () => {
 
                                 <div className="button-container w-full flex items-center justify-center mt-5">
                                     <button className='bg-primary text-white p-2 rounded-md w-full'
-                                    onClick={() =>{
-                                        navigate("/ocr");
-                                        window.scrollTo(0,0)
-                                    }}
+                                    onClick={toOcr}
                                     >
                                     Start OCR Processing
                                     </button>

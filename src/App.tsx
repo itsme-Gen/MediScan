@@ -5,6 +5,7 @@ import SignUp from './components/pages/SignUp';
 import Dashboard from "./components/pages/Dashboard"
 import ScanID from './components/pages/ScanID';
 import OCR from "./components/pages/OCR"
+import AddtoRecords from './components/pages/AddtoRecords';
 
 const App: React.FC = () => {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -22,6 +23,7 @@ const App: React.FC = () => {
           <Route path="/signup" element={<SignUp />}/>
           <Route path='/scanid' element={<ScanID/>}/>
           <Route path='/ocr' element ={<OCR/>}/>
+          <Route path='/addtorecords' element ={<AddtoRecords/>}/>
         </Routes>
       </BrowserRouter>
     </div>

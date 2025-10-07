@@ -7,6 +7,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
+import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
 
@@ -20,7 +21,7 @@ const SignUp:React.FC = () => {
     role: "",
     department: "",
     licenseNumber: "",
-    employerId: "",
+    hospitalId: "",
     email: "",
     phoneNumber: "",
     password: "",
@@ -28,7 +29,7 @@ const SignUp:React.FC = () => {
   });
 
   const validateStep1 = () => {
-  const { firstName, middleName, lastName, gender, role, department, licenseNumber, employerId } = formData;
+  const { firstName, middleName, lastName, gender, role, department, licenseNumber, hospitalId } = formData;
   if (
     !firstName.trim() ||
     !middleName.trim() ||
@@ -37,7 +38,7 @@ const SignUp:React.FC = () => {
     !role ||
     !department.trim() ||
     !licenseNumber.trim() ||
-    !employerId.trim()
+    !hospitalId.trim()
   ) {
     alert("Please fill out all required fields in Step 1");
     return false;
@@ -58,9 +59,22 @@ const SignUp:React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const  handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log(formData);
+
+    if(formData.password == formData.confirmPassword){
+      try{
+        const request = await axios.post("http://localhost:5000/register",formData);
+        console.log("FormData",request);
+        alert("Successfully Register")
+      }catch(error){
+        console.log('Error', error)
+      }
+    }else{
+      alert("Password does not match")
+      return ;
+    }
   }
 
 
@@ -163,7 +177,7 @@ const SignUp:React.FC = () => {
                     >
                     
                       <MenuItem value={"Doctor"}>Doctor</MenuItem>
-                      <MenuItem value={"Female"}>Nurse</MenuItem>
+                      <MenuItem value={"Nurse"}>Nurse</MenuItem>
                        <MenuItem value={"Admin"}>Admin</MenuItem>
                     </Select>
                   </FormControl>
@@ -194,7 +208,7 @@ const SignUp:React.FC = () => {
                     required
                     type='number'
                     name='employerId'
-                    value={formData.employerId}
+                    value={formData.hospitalId}
                     onChange={handleChange}
                     label= "Hospital/Employer ID"
                     variant='outlined'

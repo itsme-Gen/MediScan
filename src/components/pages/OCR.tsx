@@ -4,9 +4,11 @@ import AppBar from '../props/Appbar'
 import { MapPinHouse, CircleUser, ScanText, 
     SquarePen, User, IdCard, Calendar,RotateCcw,
     Search,
-    UserPlus
+    UserPlus,
+    VenusAndMars
 
 } from 'lucide-react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 interface extractedInfoProps{
     fullName:string,
@@ -17,11 +19,17 @@ interface extractedInfoProps{
 const OCR = () => {
     const [isdisabled,setDisabled] = useState(true)
     const toggleEdit = () => setDisabled(prev =>!prev)
+    const location = useLocation()
+    const navigate = useNavigate()
+    const {image} = location.state || {};
 
     const [formData,setFormData] = useState({
-        fullName:"",
+        firstName:"",
+        middleName: "",
+        lastName: "",
         idNumber:"",
         birthDate:"",
+        gender: "",
         address:""
     })
 
@@ -29,6 +37,14 @@ const OCR = () => {
         const {name, value} = e.target;
         setFormData(prev =>({...prev,[name]:value}));
     }
+
+    const scanAgain = (()=>{
+        navigate("/scanid");
+    });
+
+    const toAddtoRecords = (() =>{
+        navigate("/addtorecords")
+    })
   return (
     <div className='ocr-result'>
       <Sidebar/>
@@ -52,6 +68,9 @@ const OCR = () => {
                 <div className="image-scanned shadow shadow-black-500 p-5 rounded-lg">
                     <h3 className='text-md font-bold'>Original Image</h3>
                     <p className='text-sm text-gray-500'>Scanned patient ID document</p>
+                    <div className="image-id">
+                        <img src={image} alt="Image of ID" />
+                    </div>
                 </div>
 
                 <div className="extracted-information shadow shadow-black-500 p-5 rounded-lg">
@@ -74,14 +93,38 @@ const OCR = () => {
                     
 
                     <div className="input-fields grid grid-cols-2 gap-5 mt-5">
-                        <div className="full-name flex flex-col">
-                             <label htmlFor="fullName" className='flex flex-row items-center gap-2 mb-1 font-semibold text-sm'><User className='h-4 w-4'/>Full Name</label>
+                        <div className="first-name flex flex-col">
+                             <label htmlFor="firstName" className='flex flex-row items-center gap-2 mb-1 font-semibold text-sm'><User className='h-4 w-4'/>Full Name</label>
                             <input
                                 type="text" 
-                                name='fullName'
-                                value={formData.fullName}
+                                name='firstName'
+                                value={formData.firstName}
                                 onChange={handleChange}
-                                placeholder='Full Name' 
+                                placeholder='First Name' 
+                                disabled={isdisabled} 
+                                className={`${isdisabled ? "bg-gray-200 cursor-not-allowed" : "bg-white rounded-lg border border-gray-500 outline-none"}  rounded-lg p-3 `}/>
+                        </div>
+
+                        <div className="middle-name flex flex-col">
+                             <label htmlFor="middleName" className='flex flex-row items-center gap-2 mb-1 font-semibold text-sm'><User className='h-4 w-4'/>Middle Name</label>
+                            <input
+                                type="text" 
+                                name='middleName'
+                                value={formData.middleName}
+                                onChange={handleChange}
+                                placeholder='Middle Name' 
+                                disabled={isdisabled} 
+                                className={`${isdisabled ? "bg-gray-200 cursor-not-allowed" : "bg-white rounded-lg border border-gray-500 outline-none"}  rounded-lg p-3 `}/>
+                        </div>
+
+                        <div className="last-name flex flex-col">
+                             <label htmlFor="lastName" className='flex flex-row items-center gap-2 mb-1 font-semibold text-sm'><User className='h-4 w-4'/>Last Name</label>
+                            <input
+                                type="text" 
+                                name='lastName'
+                                value={formData.lastName}
+                                onChange={handleChange}
+                                placeholder='Last Name' 
                                 disabled={isdisabled} 
                                 className={`${isdisabled ? "bg-gray-200 cursor-not-allowed" : "bg-white rounded-lg border border-gray-500 outline-none"}  rounded-lg p-3 `}/>
                         </div>
@@ -109,24 +152,24 @@ const OCR = () => {
                                 className={`${isdisabled ? "bg-gray-200 cursor-not-allowed" : "bg-white rounded-lg border border-gray-500 outline-none"}  rounded-lg  p-3`}/>
                         </div>
 
-                        <div className="address-content flex flex-col">
-                            <label htmlFor="address" className='flex flex-row items-center gap-2 mb-1 font-semibold text-sm'> <MapPinHouse className='h4 w-4'/>Address</label>
-                            <input 
+                        <div className="gender flex flex-col">
+                             <label htmlFor="gender" className='flex flex-row items-center gap-2 mb-1 font-semibold text-sm'><VenusAndMars className='h-4 w-4'/>Gender</label>
+                            <input
                                 type="text" 
-                                name='address'
-                                value={formData.address}
+                                name='gender'
+                                value={formData.gender}
                                 onChange={handleChange}
-                                placeholder='Address' 
+                                placeholder='Gender' 
                                 disabled={isdisabled} 
-                                className={`${isdisabled ? "bg-gray-200 cursor-not-allowed" : "bg-white rounded-lg border border-gray-500 outline-none"}  rounded-lg  p-3`}/>
+                                className={`${isdisabled ? "bg-gray-200 cursor-not-allowed" : "bg-white rounded-lg border border-gray-500 outline-none"}  rounded-lg p-3 `}/>
                         </div>
+
                     </div>
                 </div>
             </div>
                  <div className="button-container flex flex-col justify-center items-center mx-15 my-5 border border-gray-300 p-5 rounded-xl">       
                         <div className="buttons grid grid-cols-3 gap-4 w-[50%]">
-                            <button
-                                className='border border-gray-400 p-2 rounded-md font-semibold text-sm flex flex-cols items-center justify-center gap-2'>
+                            <button onClick={scanAgain} className='border border-gray-400 p-2 rounded-md font-semibold text-sm flex flex-cols items-center justify-center gap-2'>
                                 <RotateCcw className='h-4 w-4'/>
                                 Scan Again
                             </button>
@@ -135,7 +178,7 @@ const OCR = () => {
                                 <Search className='h-4 w-4'/>
                                 Search Record
                             </button>
-                            <button className='bg-secondary p-2 rounded-md text-white font-semibold text-sm flex flex-cols items-center justify-center gap-1'>
+                            <button onClick={toAddtoRecords} className='bg-secondary p-2 rounded-md text-white font-semibold text-sm flex flex-cols items-center justify-center gap-1'>
                                 <UserPlus className='h-4 w-4'/>
                                 Add to Records
                             </button>

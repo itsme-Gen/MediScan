@@ -4,6 +4,7 @@ import Button from '@mui/material/Button'
 import {Stethoscope} from 'lucide-react'
 import {DotLottieReact} from "@lottiefiles/dotlottie-react"
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 interface LoginProps{
     onLogin: () => void
@@ -23,16 +24,41 @@ const handleChange = ((e: React.ChangeEvent<HTMLInputElement>)=>{
     }))
 })
 
-const handleSubmit = ((e: React.FormEvent)=>{
+const handleSubmit = ( async (e: React.FormEvent)=>{
     e.preventDefault();
-      if (formData && formData.email && formData.password) {
-    onLogin(); 
-    navigate("/dashboard");
-  } else {
-    alert("Please fill in all fields");
-  }
-    console.log("Response",formData)
-})
+    if (!formData.email && !formData.password) {
+        alert("All Fields are required");
+        return;
+    }
+    try{
+        const response = await axios.post('http://localhost:5000/signin',formData);
+            if(response.status === 200){
+                onLogin()
+                navigate("/dashboard");
+                alert("Login Successfully")
+            }
+        }catch(error: any){
+            if (error.response) {
+                const status = error.response.status;
+                
+                switch (status) {
+                    case 400:
+                        alert("Email and Password are required");
+                        break;
+                    case 401:
+                        alert("Invalid Email or Password");
+                        break;
+                    case 500:
+                        alert("Server Error");
+                        break;
+                    default:
+                        alert("Unexpected Error");
+                }
+            } else {
+                alert("Network Error. Please try again.");
+            }
+        }
+    })
 
 const navigate = useNavigate()
 return (

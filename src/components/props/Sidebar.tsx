@@ -6,6 +6,15 @@ import { useNavigate } from 'react-router-dom'
 
 const dashboardProps:React.FC = () => {
     const navigate = useNavigate()
+
+    const toDashboard = (() =>{
+        navigate("/dashboard")
+    })
+
+    const toScanId = (() =>{
+        navigate("/scanid")
+    })
+    
   return (
     <div className='root-dashboard'>
         <aside className='side-bar flex-shrink-0 h-screen w-70 fixed top-0 left-0  border-r border-gray-200 p-5'>
@@ -17,21 +26,13 @@ const dashboardProps:React.FC = () => {
             <div className="nav-links w-full">
                 <ul className='space-y'>
                     <li className='flex flex-row gap-2 justify-start p-1 m-5'
-                    onClick={() =>{
-                        navigate("/dashboard")
-                        window.scrollTo({
-                            top:100
-                        })
-                    }}
+                    onClick={toDashboard}
                     >
                         <Home className='text-secondary w-5 h-5'/>
                         <span className='text-secondary text-md'>Dashboard</span>
                     </li>
                     <li className='flex flex-row gap-2 justify-start p-1 m-5'
-                        onClick={()=>{
-                        navigate("/scanid");
-                        window.scrollTo(0,0)
-                    }}
+                        onClick={toScanId}
                     >
                         <Scan className='text-secondary w-5 h-5'/>
                         <span className='text-secondary text-md'>Scan ID</span>

@@ -18,7 +18,7 @@ const Dashboard:React.FC<LogoutProps> = ({onLogout}) => {
         <div className="main-content flex-1 flex-col ml-70">
             <Appbar
                 iconTitle={Home}
-                title='Dashboard'
+                title='Add to Records'
                 firstName='Juan'
                 lastName='Dela Cruz'
                 role='Doctor'
