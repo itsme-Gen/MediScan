@@ -60,7 +60,7 @@ const ScanID = () => {
             setSuccessMessage(" ID detected! Extracting information using OCR...");
 
             // Extract info 
-            const ocrResponse = await axios.post("http://localhost:5000/extract-info", formData, {
+            const ocrResponse = await axios.post("http://127.0.0.1:5000/extract-info", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 

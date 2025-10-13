@@ -207,7 +207,7 @@ const SignUp:React.FC = () => {
                   <TextField
                     required
                     type='number'
-                    name='employerId'
+                    name='hospitalId'
                     value={formData.hospitalId}
                     onChange={handleChange}
                     label= "Hospital/Employer ID"
