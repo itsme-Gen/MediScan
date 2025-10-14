@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Sidebar from "../props/Sidebar"
 import AppBar from '../props/Appbar'
-import { MapPinHouse, CircleUser, ScanText, 
+import {CircleUser, ScanText, 
     SquarePen, User, IdCard, Calendar,RotateCcw,
     Search,
     UserPlus,
@@ -10,27 +10,22 @@ import { MapPinHouse, CircleUser, ScanText,
 } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-interface extractedInfoProps{
-    fullName:string,
-    idNumber:number,
-    birthDate:number,
-    address:string
-}
 const OCR = () => {
     const [isdisabled,setDisabled] = useState(true)
     const toggleEdit = () => setDisabled(prev =>!prev)
     const location = useLocation()
     const navigate = useNavigate()
-    const {image} = location.state || {};
+    const {image , extractedData} = location.state || {};
+
+    const {first_name, middle_name, last_name, id_number, date_of_birth , gender} = extractedData || {};
 
     const [formData,setFormData] = useState({
-        firstName:"",
-        middleName: "",
-        lastName: "",
-        idNumber:"",
-        birthDate:"",
-        gender: "",
-        address:""
+        firstName: first_name || "",
+        middleName: middle_name || "",
+        lastName: last_name || "",
+        idNumber: id_number || "",
+        birthDate: date_of_birth || "",
+        gender: gender || "",
     })
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,7 +89,7 @@ const OCR = () => {
 
                     <div className="input-fields grid grid-cols-2 gap-5 mt-5">
                         <div className="first-name flex flex-col">
-                             <label htmlFor="firstName" className='flex flex-row items-center gap-2 mb-1 font-semibold text-sm'><User className='h-4 w-4'/>Full Name</label>
+                             <label htmlFor="firstName" className='flex flex-row items-center gap-2 mb-1 font-semibold text-sm'><User className='h-4 w-4'/>First Name</label>
                             <input
                                 type="text" 
                                 name='firstName'
@@ -132,7 +127,7 @@ const OCR = () => {
                         <div className="id-number flex flex-col">
                             <label htmlFor="idNumber" className='flex flex-row items-center gap-2 mb-1 font-semibold text-sm'> <IdCard className='h-4 w-4'/>ID Number</label>
                              <input 
-                                type="number" 
+                                type="text" 
                                 name='idNumber'
                                 value={formData.idNumber}
                                 onChange={handleChange}
@@ -143,7 +138,7 @@ const OCR = () => {
 
                         <div className="bird-date flex flex-col">
                             <label htmlFor="birthDate" className='flex flex-row items-center gap-2 mb-1 font-semibold text-sm'> <Calendar className='h4 w-4'/>BirthDate</label>
-                            <input type="number" 
+                            <input type="text" 
                                 name='birthDate'
                                 value={formData.birthDate}
                                 onChange={handleChange}
