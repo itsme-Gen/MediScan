@@ -78,7 +78,12 @@ const OCR = () => {
   };
 
   // Navigation handlers
-  const scanAgain = () => navigate("/scanid");
+  const scanAgain = (() =>{
+    localStorage.removeItem("saveFormData")
+    localStorage.removeItem("saveData")
+    localStorage.removeItem("saveImage")
+    navigate("/scanid")
+  });
   const toAddToRecords = () => navigate("/addtorecords");
 
   return (

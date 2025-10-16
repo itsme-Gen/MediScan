@@ -1,33 +1,127 @@
-    import React, { useEffect, useState } from 'react'
-    import Appbar from '../props/Appbar'
-    import { Activity, ActivitySquare, ArrowBigLeft, ArrowBigRight, CircleUser, Dna, Heart, HeartPulse,
-        Phone, Pill, Save, Stethoscope, Syringe, ThermometerSnowflake, User, UserPlus, Wind } from 'lucide-react'
-    import Sidebar from '../props/Sidebar'
+import React, { useEffect, useState } from 'react'
+import Appbar from '../props/Appbar'
+import { 
+    Activity, ArrowBigLeft, ArrowBigRight, CircleUser, Dna, Heart,
+    Phone, Pill, Save, Stethoscope, User, UserPlus
+} from 'lucide-react'
+import Sidebar from '../props/Sidebar'
+import axios from 'axios'
 
-    const AddtoRecords = () => {
-        const [formData,setFormData] = useState<any>({})
-        useEffect(()=>{
-            const dataa = localStorage.getItem("saveFormData")
+const AddtoRecords = () => {
+    // Extracted data 
+    const [formData, setFormData] = useState<any>({})
 
-            if(dataa){
-                setFormData(JSON.parse(dataa))
-            }
-        })
+    useEffect(() => {
+        const data = localStorage.getItem("saveFormData")
+        if (data) setFormData(JSON.parse(data))
+    }, [])
 
-        const[step, setStep] = useState<number>(1);
+    // Step management
+    const [step, setStep] = useState<number>(1)
+    const nextStep = () => setStep(prev => prev + 1)
+    const prevStep = () => setStep(prev => prev - 1)
 
-        const nextStep = (()=>{
-            setStep(prev => prev + 1)
-        })
+    // Step 1 states
+    const [contact, setContact] = useState({
+        emailAddress: '',
+        homeAddress: '',
+        contactNumber: '',
+        emergencyContact: ''
+    })
+    const [reasonForVisit, setReasonForVisit] = useState("")
+    const [vitalSigns, setVitalSigns] = useState({
+        bodyTemperature: "",
+        heartPulse: "",
+        respiratoryRate: "",
+        bloodPressure: ""
+    })
+    const [medications, setMedications] = useState([{
+        medicationName: "",
+        dateStarted: "",
+        dosage: "",
+        frequency: ""
+    }])
 
-        const prevStep = (() =>{
-            setStep(prev => prev - 1)
-        })
+    // Step 2 states
+    const [medicalHistory, setMedicalHistory] = useState([{
+        conditionName: "",
+        diagnosedDate: "",
+        conditionType: "",
+        severity: "",
+        conditionStatus: "",
+        resolutionDate: ""
+    }])
+    const [allergies, setAllergies] = useState([{
+        allergyName: "",
+        allergyType: "",
+        allergyReaction: "",
+        severity: ""
+    }])
+    const [labResults, setLabResults] = useState([{
+        testName: "",
+        testDate: "",
+        testResult: "",
+        referenceRange: "",
+        testFlag: ""
+    }])
+    const [prescriptions, setPrescriptions] = useState([{
+        medicationName: "",
+        dosage: "",
+        quantity: "",
+        datePrescribed: "",
+        prescribeBy: ""
+    }])
+
+    //for adding and updating dynamic fields
+    const addItem = (setter: any, template: any) => setter((prev: any) => [...prev, template])
+    const updateItem = (setter: any, index: number, field: string, value: string, array: any) => {
+        const updated = [...array]
+        updated[index][field] = value
+        setter(updated)
+    }
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    const saveData = {
+        formData,
+        contact,
+        reasonForVisit,
+        vitalSigns,
+        medications,
+        medicalHistory,
+        allergies,
+        labResults,
+        prescriptions
+    }
+
+    try {
+        const response = await axios.post("http://localhost:9090/sentData", saveData)
+        console.log("This is a response", response)
+
+        setContact({ emailAddress: '', homeAddress: '', contactNumber: '', emergencyContact: '' })
+        setReasonForVisit('')
+        setVitalSigns({ bodyTemperature: "", heartPulse: "", respiratoryRate: "", bloodPressure: "" })
+        setMedications([{ medicationName: "", dateStarted: "", dosage: "", frequency: "" }])
+        setMedicalHistory([{ conditionName: "", diagnosedDate: "", conditionType: "", severity: "", conditionStatus: "", resolutionDate: "" }])
+        setAllergies([{ allergyName: "", allergyType: "", allergyReaction: "", severity: "" }])
+        setLabResults([{ testName: "", testDate: "", testResult: "", referenceRange: "", testFlag: "" }])
+        setPrescriptions([{ medicationName: "", dosage: "", quantity: "", datePrescribed: "", prescribeBy: "" }])
+
+        // Optionally clear localStorage too
+        localStorage.removeItem("saveFormData")
+        console.log("savedata:",saveData)
+        alert("Record saved successfully!")
+        setStep(1) // reset to the first step if multi-step
+    } catch (error) {
+        console.log('Error', error)
+        alert("Failed to save record.")
+    }
+}
 
     return (
         <div className='addToRecords h-screen'>
-        <Sidebar/>
-        
+            <Sidebar/>
             <div className="main-content flex-1 flex-col ml-70">
                 <Appbar
                     iconTitle={UserPlus}
@@ -37,11 +131,13 @@
                     role='Doctor'
                     icon={CircleUser}
                 />
-                
-                <div className="medical-info p-15 ">
-                    <div className="title ">
+
+                <div className="medical-info p-15">
+                    <div className="title">
                         <h1 className='text-4xl font-semibold text-primary'>Medical Information</h1>
-                        <p className='text-secondary'>Complete patient medical profile for {formData.firstName} {formData.middleName} {formData.lastName}</p>
+                        <p className='text-secondary'>
+                            Complete patient medical profile for {formData.firstName} {formData.middleName} {formData.lastName}
+                        </p>
                     </div>
 
                     <div className="patient-info-card border border-gray-300 mt-10 rounded-lg">
@@ -51,767 +147,320 @@
                         </div>
 
                         <div className="patient-info flex flex-wrap justify-between px-10 mb-10">
-                                <div className="full-name">
-                                    <h3 className='font-semibold'>Full Name</h3>
-                                    <p>{formData.firstName} {formData.middleName} {formData.lastName}</p>
-                                </div>
-
-                                <div className="birthDate">
-                                    <h3 className='font-semibold'>BirthDate</h3>
-                                    <p>{formData.birthDate}</p>
-                                </div>
-
-                                <div className="gender">
-                                    <h1 className='font-semibold'>Gender</h1>
-                                    <p>{formData.gender}</p>
-                                </div>
-
-                                <div className="idNumber">
-                                    <h3 className='font-semibold'>ID Number</h3>
-                                    <p>{formData.idNumber}</p>
-                                </div>
-                        </div>
-                    </div>
-
-            <form>
-                    {/*contact Information*/}
-                    {step ===1 &&(
-                    <>
-                    <div className="contact-info-card border border-gray-300 mt-10 rounded-lg">               
-                        <div className="title flex flex-col m-5">
-                            <div className="main-text flex flex-cols items-center gap-2">
-                                <Phone className='text-secondary h-5'/>
-                                <h3 className='text-2xl font-semibold text-primary'>Contact Information</h3>
+                            <div className="full-name">
+                                <h3 className='font-semibold'>Full Name</h3>
+                                <p>{formData.firstName} {formData.middleName} {formData.lastName}</p>
                             </div>
-                        
-                            <div className="sub-text">
-                                <p className='text-sm text-gray-500'><em>Type N/A if not applicable</em></p>
+                            <div className="birthDate">
+                                <h3 className='font-semibold'>BirthDate</h3>
+                                <p>{formData.birthDate}</p>
                             </div>
-                        </div>
-
-                        <div className="contact-info flex justify-center items-center">
-                            <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-x-10 mb-10 w-[90%]">
-                                <div className="email-address">
-                                    <h3 className='font-semibold text-sm mb-1'>Email Address</h3>
-                                    <input 
-                                    className='border border-gray-500 outline-primary p-2 rounded'
-                                    type="email"
-                                    placeholder='e.g. juan@gmail.com'
-                                    />
-                                </div>
-
-                                <div className="home-address">
-                                    <h3 className='font-semibold text-sm mb-1'>Home Address</h3>
-                                    <input 
-                                    className='border border-gray-500 outline-primary p-2 rounded'
-                                    type="text"
-                                    placeholder='e.g 123 Mabini St., Quezon City'
-                                    />
-                                </div>
-
-                                <div className="contact-number">
-                                    <h3 className='font-semibold text-sm mb-1'>Contact number</h3>
-                                    <input 
-                                    className='border border-gray-500 outline-primary p-2 rounded'
-                                    type="number"
-                                    placeholder='+639 xxx xxx xxx'
-                                    />
-                                </div>
-
-                                <div className="emergency-contact">
-                                    <h3 className='font-semibold text-sm mb-1'>Emergency contact number</h3>
-                                    <input 
-                                    className='border border-gray-500 outline-none p-2 rounded'
-                                    type="number"
-                                    placeholder='+639 xxx xxx xxx'
-                                    />
-                                </div>
+                            <div className="gender">
+                                <h1 className='font-semibold'>Gender</h1>
+                                <p>{formData.gender}</p>
+                            </div>
+                            <div className="idNumber">
+                                <h3 className='font-semibold'>ID Number</h3>
+                                <p>{formData.idNumber}</p>
                             </div>
                         </div>
                     </div>
 
-                    {/*Reason for Visit */}
-                    <div className="reason-for-visit-card border border-gray-300 mt-10 rounded-lg">
-
-                        <div className="title flex flex-col m-5">
-                            <div className="main-text flex flex-cols items-center gap-2">
-                                <Stethoscope className='text-secondary h-5'/>
-                                <h3 className='text-2xl font-semibold text-primary'>Reason for visit</h3>
-                            </div>
-                        </div>
-
-                        <div className="text-area px-10 mb-5">
-                            <textarea
-                                required
-                                id="message"
-                                name="reasonForVisit"
-                                placeholder="Type something here..."
-                                rows={5}
-                                className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
-                            />
-                        </div>
-                        
-                    </div>
-
-                    {/* Vital Sign */}
-
-                    
-                    <div className="vital-info-card border border-gray-300 mt-10 rounded-lg">
-                        <div className="title flex flex-col m-5">
-                            <div className="main-text flex flex-cols items-center gap-2">
-                                <Activity className='text-secondary h-5'/>
-                                <h3 className='text-2xl font-semibold text-primary'>Vital Sign</h3>
-                            </div>
-
-                            <div className="sub-text">
-                                <p className='text-sm text-gray-500'><em>All fields are required*</em></p>
-                            </div>
-                        </div>
-
-                        <div className="vital-info-card flex justify-center">
-                            <div className="vital-info grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] w-[90%] gap-x-5 mb-10">
-                                <div className="container">
-                                    <div className="body-temperature flex flex-cols items-center mb-2"> 
-                                        <ThermometerSnowflake className='h-4'/>
-                                        <h3 className='text-sm font-semibold'>Body Temperature</h3>
+                    <form>
+                        {step === 1 && (
+                            <>
+                                {/* Contact Info */}
+                                <div className="contact-info-card border border-gray-300 mt-10 rounded-lg">
+                                    <div className="title flex flex-col m-5">
+                                        <div className="main-text flex flex-cols items-center gap-2">
+                                            <Phone className='text-secondary h-5'/>
+                                            <h3 className='text-2xl font-semibold text-primary'>Contact Information</h3>
+                                        </div>
+                                        <div className="sub-text">
+                                            <p className='text-sm text-gray-500'><em>Type N/A if not applicable</em></p>
+                                        </div>
                                     </div>
 
-                                    <div className="input-fields">
-                                        <input
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        type='text'
-                                        required
-                                        placeholder='36.5°C – 37.5°C'
-                                        />
+                                    <div className="contact-info flex justify-center items-center">
+                                        <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-x-10 mb-10 w-[90%]">
+                                            <input 
+                                                type="email"
+                                                placeholder="Email Address"
+                                                value={contact.emailAddress}
+                                                onChange={e => setContact({...contact, emailAddress: e.target.value})}
+                                                className='border border-gray-500 outline-primary p-2 rounded'
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="Home Address"
+                                                value={contact.homeAddress}
+                                                onChange={e => setContact({...contact, homeAddress: e.target.value})}
+                                                className='border border-gray-500 outline-primary p-2 rounded'
+                                            />
+                                            <input
+                                                type="number"
+                                                placeholder="Contact Number"
+                                                value={contact.contactNumber}
+                                                onChange={e => setContact({...contact, contactNumber: e.target.value})}
+                                                className='border border-gray-500 outline-primary p-2 rounded'
+                                            />
+                                            <input
+                                                type="number"
+                                                placeholder="Emergency Contact"
+                                                value={contact.emergencyContact}
+                                                onChange={e => setContact({...contact, emergencyContact: e.target.value})}
+                                                className='border border-gray-500 outline-primary p-2 rounded'
+                                            />
+                                        </div>
                                     </div>
                                 </div>
-                            
-                                <div className="container">
-                                    <div className="heart-rate flex flex-cols items-center mb-2">
-                                        <HeartPulse className='h-4'/>
-                                        <h3 className='text-sm font-semibold'>Heart Pulse</h3>
-                                    </div>
 
-                                    <div className="input-fields">
-                                        <input
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        required
-                                        type='text'
-                                        placeholder='60 – 100 bpm'
+                                {/* Reason for Visit */}
+                                <div className="reason-for-visit-card border border-gray-300 mt-10 rounded-lg">
+                                    <div className="title flex flex-col m-5">
+                                        <div className="main-text flex flex-cols items-center gap-2">
+                                            <Stethoscope className='text-secondary h-5'/>
+                                            <h3 className='text-2xl font-semibold text-primary'>Reason for Visit</h3>
+                                        </div>
+                                    </div>
+                                    <div className="text-area px-10 mb-5">
+                                        <textarea
+                                            value={reasonForVisit}
+                                            onChange={e => setReasonForVisit(e.target.value)}
+                                            placeholder="Type something here..."
+                                            rows={5}
+                                            className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
                                         />
                                     </div>
                                 </div>
 
-                                <div className="container">
-                                    <div className="respitory-rate flex flex-cols items-center mb-2">
-                                        <Wind className='h-4'/>
-                                        <h3 className='text-sm font-semibold'>Respitory rate</h3>
+                                {/* Vital Signs */}
+                                <div className="vital-info-card border border-gray-300 mt-10 rounded-lg">
+                                    <div className="title flex flex-col m-5">
+                                        <div className="main-text flex flex-cols items-center gap-2">
+                                            <Activity className='text-secondary h-5'/>
+                                            <h3 className='text-2xl font-semibold text-primary'>Vital Signs</h3>
+                                        </div>
+                                        <div className="sub-text">
+                                            <p className='text-sm text-gray-500'><em>All fields are required*</em></p>
+                                        </div>
                                     </div>
-
-                                    <div className="input-fields">
-                                        <input
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        required
-                                        type='text'
-                                        placeholder='12 – 20 breaths/min'
-                                        />
+                                    <div className="vital-info flex justify-center">
+                                        <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] w-[90%] gap-x-5 mb-10">
+                                            <input
+                                                type="text"
+                                                placeholder="Body Temperature"
+                                                value={vitalSigns.bodyTemperature}
+                                                onChange={e => setVitalSigns({...vitalSigns, bodyTemperature: e.target.value})}
+                                                className='p-2 rounded border border-gray-500 outline-primary'
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="Heart Pulse"
+                                                value={vitalSigns.heartPulse}
+                                                onChange={e => setVitalSigns({...vitalSigns, heartPulse: e.target.value})}
+                                                className='p-2 rounded border border-gray-500 outline-primary'
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="Respiratory Rate"
+                                                value={vitalSigns.respiratoryRate}
+                                                onChange={e => setVitalSigns({...vitalSigns, respiratoryRate: e.target.value})}
+                                                className='p-2 rounded border border-gray-500 outline-primary'
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="Blood Pressure"
+                                                value={vitalSigns.bloodPressure}
+                                                onChange={e => setVitalSigns({...vitalSigns, bloodPressure: e.target.value})}
+                                                className='p-2 rounded border border-gray-500 outline-primary'
+                                            />
+                                        </div>
                                     </div>
                                 </div>
-                                
-                                <div className="container">
-                                    <div className="respitory-rate flex flex-cols items-center mb-2">
-                                        <ActivitySquare className='h-4'/>
-                                        <h3 className='text-sm font-semibold'>Respitory rate</h3>
-                                    </div>
 
-                                    <div className="input-fields">
-                                        <input
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        required
-                                        type='text'
-                                        placeholder='12 – 20 breaths/min'
-                                        />
+                                {/* Next Button */}
+                                <div className="button-container flex justify-center items-center m-5">
+                                    <button 
+                                        className='bg-primary rounded px-6 py-2 text-white flex flex-cols items-center gap-2'
+                                        onClick={(e)=>{
+                                            e.preventDefault()
+                                            nextStep()
+                                        }}
+                                    >
+                                        Next
+                                        <ArrowBigRight/>
+                                    </button>
+                                </div>
+                            </>
+                        )}
+
+                        {step === 2 && (
+                            <>
+                                {/* MEDICATION */}
+                                <div className="medication-info-card border border-gray-300 mt-10 rounded-lg">
+                                    <div className="title flex flex-col m-5">
+                                        <div className="main-text flex flex-cols items-center gap-2">
+                                            <Pill className="text-secondary h-5" />
+                                            <h3 className="text-2xl font-semibold text-primary">Current Medication</h3>
+                                        </div>
+                                        <div className="sub-text">
+                                            <p className="text-sm text-gray-500"><em>Type N/A if not applicable</em></p>
+                                        </div>
+                                    </div>
+                                    <div className="medication-info flex justify-center mb-10">
+                                        <div className="grid w-[90%] gap-6">
+                                            {medications.map((med, i) => (
+                                                <div key={i} className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-3 mb-3">
+                                                    <input placeholder="Medication Name" value={med.medicationName} onChange={e => updateItem(setMedications, i, "medicationName", e.target.value, medications)} className="p-2 border border-gray-500 rounded" />
+                                                    <input type="date" placeholder="Date Started" value={med.dateStarted} onChange={e => updateItem(setMedications, i, "dateStarted", e.target.value, medications)} className="p-2 border border-gray-500 rounded" />
+                                                    <input placeholder="Dosage" value={med.dosage} onChange={e => updateItem(setMedications, i, "dosage", e.target.value, medications)} className="p-2 border border-gray-500 rounded" />
+                                                    <input placeholder="Frequency" value={med.frequency} onChange={e => updateItem(setMedications, i, "frequency", e.target.value, medications)} className="p-2 border border-gray-500 rounded" />
+                                                </div>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                className="bg-primary text-white px-3 py-1 rounded mt-2"
+                                                onClick={() => addItem(setMedications, { medicationName: "", dateStarted: "", dosage: "", frequency: "" })}
+                                            >
+                                                + Add Medication
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
 
-                        -+{/*Medication*/}
-                        <div className="medication-info-card border border-gray-300 mt-10 rounded-lg">
-                            <div className="title flex flex-col m-5">
-                            <div className="main-text flex flex-cols items-center gap-2">
-                            <Pill className="text-secondary h-5" />
-                            <h3 className="text-2xl font-semibold text-primary">Current Medication</h3>
-                            </div>
-
-                            <div className="sub-text">
-                            <p className="text-sm text-gray-500">
-                                <em>Type N/A if not applicable</em>
-                            </p>
-                            </div>
-                        </div>
-
-                        <div className="medication-info flex justify-center mb-10">
-                            <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-6 w-[90%]">
-                            <div className="container flex flex-col">
-                                <label className="text-sm font-semibold" htmlFor="medicationName">
-                                Medication Name
-                                </label>
-                                <input
-                                name="medicationName"
-                                className="p-2 rounded border border-gray-500 outline-primary"
-                                type="text"
-                                placeholder="Medication Name"
-                                />
-                            </div>
-
-                            <div className="container flex flex-col">
-                                <label className="text-sm font-semibold" htmlFor="dateStarted">
-                                Date Started
-                                </label>
-                                <input
-                                name="dateStarted"
-                                className="p-2 rounded border border-gray-500 outline-primary"
-                                type="date"
-                                />
-                            </div>
-
-                            <div className="container flex flex-col">
-                                <label className="text-sm font-semibold" htmlFor="dosage">
-                                Dosage
-                                </label>
-                                <input
-                                name="dosage"
-                                className="p-2 rounded border border-gray-500 outline-primary"
-                                type="text"
-                                placeholder="Dosage"
-                                />
-                            </div>
-
-                            <div className="container flex flex-col">
-                                <label className="text-sm font-semibold" htmlFor="frequency">
-                                Frequency
-                                </label>
-                                <input
-                                name="frequency"
-                                className="p-2 rounded border border-gray-500 outline-primary"
-                                type="text"
-                                placeholder="Frequency"
-                                />
-                            </div>
-
-                            <div className="container mt-auto flex flex-col justify-end">
-                                <button
-                                type="button"
-                                className="bg-primary p-2 rounded border border-gray-500 outline-primary w-full text-white text-md hover:bg-primary/90 transition"
-                                >
-                                +
-                                </button>
-                            </div>
-                            </div>
-                        </div>
-                        </div>
-                            <div className="button-container flex justify-center items-center m-5">
-                            <button 
-                            className='bg-primary rounded px-6 py-2 text-white flex flex-cols items-center gap-2'
-                                onClick={(e) =>{
-                                    e.preventDefault();
-                                    nextStep()
-                                }}>
-                                Next
-                                <ArrowBigRight/>
-                                </button>
-                            </div>
-                    </>
-                )}
-
-                {step ===2 &&(
-                    <>
-                    {/*Meical History */}
-                        <div className="medical-history-card border border-gray-300 mt-10 rounded-lg">
-                            <div className="title flex flex-col m-5">
-                                <div className="main-text flex flex-cols items-center gap-2">
-                                    <Heart className='text-secondary h-5'/>
-                                    <h3 className='text-2xl font-semibold text-primary'>Medical History</h3>
+                                {/* MEDICAL HISTORY */}
+                                <div className="medical-history-card border border-gray-300 mt-10 rounded-lg">
+                                    <div className="title flex flex-col m-5">
+                                        <div className="main-text flex flex-cols items-center gap-2">
+                                            <Heart className='text-secondary h-5'/>
+                                            <h3 className='text-2xl font-semibold text-primary'>Medical History</h3>
+                                        </div>
+                                        <div className="sub-text">
+                                            <p className='text-sm text-gray-500'><em>Type N/A if not applicable</em></p>
+                                        </div>
+                                    </div>
+                                    <div className="medical-history-info flex justify-center mb-10">
+                                        <div className="grid w-[90%] gap-6">
+                                            {medicalHistory.map((mh, i) => (
+                                                <div key={i} className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3 mb-3">
+                                                    <input placeholder="Condition Name" value={mh.conditionName} onChange={e => updateItem(setMedicalHistory, i, "conditionName", e.target.value, medicalHistory)} className="p-2 border border-gray-500 rounded" />
+                                                    <input type="date" placeholder="Diagnose Date" value={mh.diagnosedDate} onChange={e => updateItem(setMedicalHistory, i, "diagnosedDate", e.target.value, medicalHistory)} className="p-2 border border-gray-500 rounded" />
+                                                    <input placeholder="Condition Type" value={mh.conditionType} onChange={e => updateItem(setMedicalHistory, i, "conditionType", e.target.value, medicalHistory)} className="p-2 border border-gray-500 rounded" />
+                                                    <input placeholder="Severity" value={mh.severity} onChange={e => updateItem(setMedicalHistory, i, "severity", e.target.value, medicalHistory)} className="p-2 border border-gray-500 rounded" />
+                                                    <input placeholder="Condition Status" value={mh.conditionStatus} onChange={e => updateItem(setMedicalHistory, i, "conditionStatus", e.target.value, medicalHistory)} className="p-2 border border-gray-500 rounded" />
+                                                    <input type="date" placeholder="Resolution Date" value={mh.resolutionDate} onChange={e => updateItem(setMedicalHistory, i, "resolutionDate", e.target.value, medicalHistory)} className="p-2 border border-gray-500 rounded" />
+                                                </div>
+                                            ))}
+                                            <button type="button" className="bg-primary text-white px-3 py-1 rounded mt-2" onClick={() => addItem(setMedicalHistory, { conditionName: "", diagnosedDate: "", conditionType: "", severity: "", conditionStatus: "", resolutionDate: "" })}>
+                                                + Add Medical History
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div className="sub-text">
-                                    <p className='text-sm text-gray-500'><em>Type N/A if not applicable</em></p>
-                                </div>
-                            </div>
-
-                            <div className="medical-history-info flex justify-center mb-10">
-                                <div className="grid-container grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] w-[90%] gap-5">
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="conditionName">Conditon Name</label>
-                                        <input
-                                            type='text'
-                                            className='conditionName p-2 rounded border border-gray-500 outline-primary'
-                                            name='conditionName'
-                                            placeholder='Conditon name'
-                                        />
+                                {/* ALLERGIES */}
+                                <div className="allergies-info-card border border-gray-300 mt-10 rounded-lg">
+                                    <div className="title flex flex-col m-5">
+                                        <div className="main-text flex flex-cols items-center gap-2">
+                                            <Dna className='text-secondary h-5'/>
+                                            <h3 className='text-2xl font-semibold text-primary'>Allergies</h3>
+                                        </div>
+                                        <div className="sub-text">
+                                            <p className='text-sm text-gray-500'><em>Type N/A if not applicable</em></p>
+                                        </div>
                                     </div>
-
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="diagnoseDate">Diagnose Date</label>
-                                        <input
-                                            type='date'
-                                            className='conditionName p-2 rounded border border-gray-500 outline-primary'
-                                            name='diagnosedDate'
-                                            placeholder='Diagnose Date'
-                                        />
+                                    <div className="allergies-info flex justify-center mb-10">
+                                        <div className="grid w-[90%] gap-6">
+                                            {allergies.map((al, i) => (
+                                                <div key={i} className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3 mb-3">
+                                                    <input placeholder="Allergy Name" value={al.allergyName} onChange={e => updateItem(setAllergies, i, "allergyName", e.target.value, allergies)} className="p-2 border border-gray-500 rounded" />
+                                                    <input placeholder="Allergy Type" value={al.allergyType} onChange={e => updateItem(setAllergies, i, "allergyType", e.target.value, allergies)} className="p-2 border border-gray-500 rounded" />
+                                                    <input placeholder="Allergy Reaction" value={al.allergyReaction} onChange={e => updateItem(setAllergies, i, "allergyReaction", e.target.value, allergies)} className="p-2 border border-gray-500 rounded" />
+                                                    <input placeholder="Severity" value={al.severity} onChange={e => updateItem(setAllergies, i, "severity", e.target.value, allergies)} className="p-2 border border-gray-500 rounded" />
+                                                </div>
+                                            ))}
+                                            <button type="button" className="bg-primary text-white px-3 py-1 rounded mt-2" onClick={() => addItem(setAllergies, { allergyName: "", allergyType: "", allergyReaction: "", severity: "" })}>
+                                                + Add Allergy
+                                            </button>
+                                        </div>
                                     </div>
-
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="conditionType">Condition Type</label>
-                                        <select className='p-2 rounded border border-gray-500 outline-primary'
-                                        name="conditionTpe" id="conditionType">
-                                            <option value="">Condition Type</option>
-                                            <option value="N/A">N/A</option>
-                                            <option value="chronic">Chronic</option>
-                                            <option value="acute">Acute</option>
-                                            <option value="infectious">infectious</option>
-                                            <option value="genetal">Genetal</option>
-                                            <option value="mentalHealth">MentalHealth</option>
-                                            <option value="autoImmune">Auto Immune</option>
-                                            <option value="cancer">Cancer</option>
-                                            <option value="cardiovascular">Cardiovascular</option>
-                                            <option value="respiratoty">Respiratory</option>
-                                            <option value="neurological">Neurological</option>
-                                            <option value="pregnancyComplicaiton">Pregnancy Complication</option>
-                                            <option value="congenital">Congenital</option>
-                                            <option value="subtanceAbuse">Subtance Abuse</option>
-                                        </select>
-                                    </div>
-
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="conditonSeverity">Severity</label>
-                                        <select 
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        name="conditionSeverity" id="conditionSeverity">
-                                            <option value="">Severity</option>
-                                            <option value="mid">Mid</option>
-                                            <option value="moderate">Moderate</option>
-                                            <option value="severe">Severe</option>
-                                        </select>
-                                    </div>
-
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="severity">Condition Status</label>
-                                        <select 
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        name="conditionStatus" id="conditionStatus">
-                                            <option value="">Status</option>
-                                            <option value="active">Active</option>
-                                            <option value="progressive">Progressive</option>
-                                            <option value="resolved">Resolved</option>
-                                        </select>
-                                    </div>
-
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="severity">Resolution Date</label>
-                                        <input 
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        name='resolutionDate'
-                                        type="date" />
-                                    </div>
-
-                                    <div className="container mt-auto">
-                                        <button 
-                                        className='bg-primary p-2 rounded border border-gray-500 outline-primary w-full text-white text-md'
-                                        >
-                                        +
-                                        </button>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        {/*Alllergies*/}
-                        <div className="allergies-info-card border border-gray-300 mt-10 rounded-lg">
-                            <div className="title flex flex-col m-5">
-                                <div className="main-text flex flex-cols items-center gap-2">
-                                    <Dna className='text-secondary h-5'/>
-                                    <h3 className='text-2xl font-semibold text-primary'>Allergies</h3>
                                 </div>
 
-                                <div className="sub-text">
-                                    <p className='text-sm text-gray-500'><em>Type N/A if not applicable</em></p>
-                                </div>
-                            </div>
-                                                    
-                            <div className="allergies-info flex justify-center mb-10">
-                                <div className="grid-container grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] w-[90%] gap-5">
-
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="allergyName">Allergy Name</label>
-                                        <input 
-                                        id='allergyName'
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        type="text" 
-                                        placeholder='e.g seafood allergy'
-                                        />
+                                {/* LAB RESULTS */}
+                                <div className="lab-result-card border border-gray-300 mt-10 rounded-lg">
+                                    <div className="title flex flex-col m-5">
+                                        <div className="main-text flex flex-cols items-center gap-2">
+                                            <Dna className='text-secondary h-5'/>
+                                            <h3 className='text-2xl font-semibold text-primary'>Lab Results</h3>
+                                        </div>
+                                        <div className="sub-text">
+                                            <p className='text-sm text-gray-500'><em>Type N/A if not applicable</em></p>
+                                        </div>
                                     </div>
-
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="allergyName">Allergy Type</label>
-                                        <input 
-                                        id='allergyType'
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        type="text" 
-                                        placeholder='e.g Food,Medication etc.'
-                                        />
+                                    <div className="labResult-info flex justify-center mb-10">
+                                        <div className="grid w-[90%] gap-6">
+                                            {labResults.map((lr, i) => (
+                                                <div key={i} className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3 mb-3">
+                                                    <input placeholder="Test Name" value={lr.testName} onChange={e => updateItem(setLabResults, i, "testName", e.target.value, labResults)} className="p-2 border border-gray-500 rounded" />
+                                                    <input type="date" placeholder="Test Date" value={lr.testDate} onChange={e => updateItem(setLabResults, i, "testDate", e.target.value, labResults)} className="p-2 border border-gray-500 rounded" />
+                                                    <input placeholder="Test Result" value={lr.testResult} onChange={e => updateItem(setLabResults, i, "testResult", e.target.value, labResults)} className="p-2 border border-gray-500 rounded" />
+                                                    <input placeholder="Reference Range" value={lr.referenceRange} onChange={e => updateItem(setLabResults, i, "referenceRange", e.target.value, labResults)} className="p-2 border border-gray-500 rounded" />
+                                                    <input placeholder="Flag" value={lr.testFlag} onChange={e => updateItem(setLabResults, i, "testFlag", e.target.value, labResults)} className="p-2 border border-gray-500 rounded" />
+                                                </div>
+                                            ))}
+                                            <button type="button" className="bg-primary text-white px-3 py-1 rounded mt-2" onClick={() => addItem(setLabResults, { testName: "", testDate: "", testResult: "", referenceRange: "", testFlag: "" })}>
+                                                + Add Lab Result
+                                            </button>
+                                        </div>
                                     </div>
-
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="allergyReaction">Allergy Reaction</label>
-                                        <input 
-                                        id='allergyReaction'
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        type="text" 
-                                        placeholder='e. Difficulty in breathing, Rushes etc.'
-                                        />
-                                    </div>
-
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="Severity">Severity</label>
-                                        <select 
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        name="allergySeverity" id="allergySeverity">
-                                            <option value="N/A">Severity</option>
-                                            <option value="mid">Mid</option>
-                                            <option value="moderate">Moderate</option>
-                                            <option value="severe">Severe</option>
-                                        </select>
-                                    </div>
-
-                                    <div className="container mt-auto">
-                                        <button 
-                                        className='bg-primary p-2 rounded border border-gray-500 outline-primary w-full text-white text-md'
-                                        >
-                                        +
-                                        </button>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-
-                        {/*LAB Results*/}
-
-                        <div className="lab-result-card border border-gray-300 mt-10 rounded-lg">
-                            <div className="title flex flex-col m-5">
-                                <div className="main-text flex flex-cols items-center gap-2">
-                                    <Dna className='text-secondary h-5'/>
-                                    <h3 className='text-2xl font-semibold text-primary'>LAB Result</h3>
                                 </div>
 
-                                <div className="sub-text">
-                                    <p className='text-sm text-gray-500'><em>Type N/A if not applicable</em></p>
-                                </div>
-                            </div>
-                                                    
-                            <div className="labResult-info flex justify-center mb-10">
-                                <div className="grid-container grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] w-[90%] gap-5">
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="testName">Test Name</label>
-                                        <input 
-                                        id='testName'
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        type="text" 
-                                        placeholder='Test Name'
-                                        />
+                                {/* PRESCRIPTIONS */}
+                                <div className="prescription-card border border-gray-300 mt-10 rounded-lg">
+                                    <div className="title flex flex-col m-5">
+                                        <div className="main-text flex flex-cols items-center gap-2">
+                                            <Pill className='text-secondary h-5'/>
+                                            <h3 className='text-2xl font-semibold text-primary'>Prescriptions</h3>
+                                        </div>
+                                        <div className="sub-text">
+                                            <p className='text-sm text-gray-500'><em>Type N/A if not applicable</em></p>
+                                        </div>
                                     </div>
-
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="testDate">Date of Test</label>
-                                        <input 
-                                        id='testDate'
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        type="date" 
-                                        placeholder='Date of Test'
-                                        />
+                                    <div className="prescription-info flex justify-center mb-10">
+                                        <div className="grid w-[90%] gap-6">
+                                            {prescriptions.map((pr, i) => (
+                                                <div key={i} className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3 mb-3">
+                                                    <input placeholder="Medication Name" value={pr.medicationName} onChange={e => updateItem(setPrescriptions, i, "medicationName", e.target.value, prescriptions)} className="p-2 border border-gray-500 rounded" />
+                                                    <input placeholder="Dosage" value={pr.dosage} onChange={e => updateItem(setPrescriptions, i, "dosage", e.target.value, prescriptions)} className="p-2 border border-gray-500 rounded" />
+                                                    <input type="number" placeholder="Quantity" value={pr.quantity} onChange={e => updateItem(setPrescriptions, i, "quantity", e.target.value, prescriptions)} className="p-2 border border-gray-500 rounded" />
+                                                    <input type="date" placeholder="Date Prescribed" value={pr.datePrescribed} onChange={e => updateItem(setPrescriptions, i, "datePrescribed", e.target.value, prescriptions)} className="p-2 border border-gray-500 rounded" />
+                                                    <input placeholder="Prescribed By" value={pr.prescribeBy} onChange={e => updateItem(setPrescriptions, i, "prescribeBy", e.target.value, prescriptions)} className="p-2 border border-gray-500 rounded" />
+                                                </div>
+                                            ))}
+                                            <button type="button" className="bg-primary text-white px-3 py-1 rounded mt-2" onClick={() => addItem(setPrescriptions, { medicationName: "", dosage: "", quantity: "", datePrescribed: "", prescribeBy: "" })}>
+                                                + Add Prescription
+                                            </button>
+                                        </div>
                                     </div>
-
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="testResult">Test Result</label>
-                                        <input 
-                                        id='testResult'
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        type="text" 
-                                        placeholder='Test Result'
-                                        />
-                                    </div>
-
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="referenceRange">Reference Range</label>
-                                        <input 
-                                        id='referenceRange'
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        type="text" 
-                                        placeholder='e.g 40-60'
-                                        />
-                                    </div>
-
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="testFlag">Flag</label>
-                                        <select 
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        name="testFlag" id="testFlag">
-                                            <option value="N/A">Flag</option>
-                                            <option value="Normal">Normal</option>
-                                            <option value="High">High</option>
-                                            <option value="Low">Low</option>
-                                        </select>
-                                    </div>
-
-                                    <div className="container mt-auto">
-                                        <button 
-                                        className='bg-primary p-2 rounded border border-gray-500 outline-primary w-full text-white text-md'
-                                        >
-                                        +
-                                        </button>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        {/*IMMUNIZATIONS*/}
-
-
-                        <div className="immunizations-card border border-gray-300 mt-10 rounded-lg">
-                            <div className="title flex flex-col m-5">
-                                <div className="main-text flex flex-cols items-center gap-2">
-                                    <Syringe className='text-secondary h-5'/>
-                                    <h3 className='text-2xl font-semibold text-primary'>IMMUNIZATIONS</h3>
                                 </div>
 
-                                <div className="sub-text">
-                                    <p className='text-sm text-gray-500'><em>Type N/A if not applicable</em></p>
+                                {/* Previous & Save Buttons */}
+                                <div className="button-container flex justify-center items-center m-5 gap-4">
+                                    <button className='bg-primary rounded px-6 py-2 text-white flex items-center gap-2' onClick={(e)=>{ e.preventDefault(); prevStep() }}>
+                                        <ArrowBigLeft/> Previous
+                                    </button>
+                                    <button className='bg-primary rounded px-6 py-2 text-white flex items-center gap-2' onClick={handleSave}>
+                                        <Save/> Save to Records
+                                    </button>
                                 </div>
-                            </div>
-                                                    
-                            <div className="immunization-info flex justify-center mb-10">
-                                <div className="grid-container grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] w-[90%] gap-5">
-                                    
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="vaccineName">Name of Vaccine</label>
-                                        <input 
-                                        id='vaccineName'
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        type="text" 
-                                        placeholder='Name of Vaccine'
-                                        />
-                                    </div>
-
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="dateGiven">Date Given</label>
-                                        <input 
-                                        id='dateGiven'
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        type="date" 
-                                        />
-                                    </div>
-
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="nextDue">Next Due</label>
-                                        <input 
-                                        id='nextDue'
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        type="date" 
-                                        />
-                                    </div>
-
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="givenBy">Given By</label>
-                                        <input 
-                                        id='givenBy'
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        type="text" 
-                                        placeholder='Name of Administered'
-                                        />
-                                    </div>
-
-
-                                
-
-                                    <div className="container mt-auto">
-                                        <button 
-                                        className='bg-primary p-2 rounded border border-gray-500 outline-primary w-full text-white text-md'
-                                        >
-                                        +
-                                        </button>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="button-container flex justify-center items-center m-5 gap-4">
-                            <button 
-                                className='bg-primary rounded px-6 py-2 text-white flex flex-cols items-center gap-2'
-                                  onClick={(e) =>{
-                                    e.preventDefault();
-                                    prevStep()
-                                }}>
-                                <ArrowBigLeft/>
-                                Previous
-                            </button>
-
-                            <button 
-                                className='bg-primary rounded px-6 py-2 text-white flex flex-cols items-center gap-2'
-                                  onClick={(e) =>{
-                                    e.preventDefault();
-                                    nextStep()
-                                }}>
-                                    Next
-                                <ArrowBigRight/>
-                            </button>
-
-                        </div>
-                    </>
-                )}
-
-                {step === 3 &&(
-                    <>
-                    {/*Prescriptions*/}
-
-                    <div className="prescription-card border border-gray-300 mt-10 rounded-lg">
-                            <div className="title flex flex-col m-5">
-                                <div className="main-text flex flex-cols items-center gap-2">
-                                    <Pill className='text-secondary h-5'/>
-                                    <h3 className='text-2xl font-semibold text-primary'>Prescription</h3>
-                                </div>
-
-                                <div className="sub-text">
-                                    <p className='text-sm text-gray-500'><em>Type N/A if not applicable</em></p>
-                                </div>
-                            </div>
-                                                    
-                            <div className="prescription-info flex justify-center mb-10">
-                                <div className="grid-container grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] w-[90%] gap-5">
-                                    
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="medicationName">Medication Name</label>
-                                        <input 
-                                        id='medicationName'
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        type="text" 
-                                        placeholder='Medication Name'
-                                        />
-                                    </div>
-
-                                    
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="dosage">Dosage</label>
-                                        <input 
-                                        id='dosage'
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        type="text" 
-                                        placeholder='Dosage'
-                                        />
-                                    </div>
-
-                                    
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="quantity">Quantity</label>
-                                        <input 
-                                        id='quantity'
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        type="number" 
-                                        placeholder='Quantity'
-                                        />
-                                    </div>
-
-                                    
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="datePrescribe">Date of Prescribe</label>
-                                        <input 
-                                        id='datePrescribed'
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        type="date" 
-                                        />
-                                    </div>
-
-                                    
-                                    <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="prescribeBy">Prescribe By</label>
-                                        <input 
-                                        id='prescribeBy'
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        type="text" 
-                                        placeholder='Name of Provider'
-                                        />
-                                    </div>
-
-                                    <div className="container mt-auto">
-                                        <button 
-                                        className='bg-primary p-2 rounded border border-gray-500 outline-primary w-full text-white text-md'
-                                        >
-                                        +
-                                        </button>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        {/*Clinical Notes*/}
-
-                        <div className="reason-for-visit-card border border-gray-300 mt-10 rounded-lg">
-
-                            <div className="title flex flex-col m-5">
-                                <div className="main-text flex flex-cols items-center gap-2">
-                                    <Stethoscope className='text-secondary h-5'/>
-                                    <h3 className='text-2xl font-semibold text-primary'>Clinical Notes</h3>
-                                </div>
-                            </div>
-
-                            <div className="text-area px-10 mb-5">
-                                <textarea
-                                    required
-                                    id="message"
-                                    name="clinicalNotes"
-                                    placeholder="Type something here..."
-                                    rows={5}
-                                    className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                />
-                            </div>
-                        
-                        </div>
-
-                        <div className="button-container flex justify-center items-center m-5 gap-4">
-                            <button 
-                                className='bg-primary rounded px-6 py-2 text-white flex flex-cols items-center gap-2'
-                                 onClick={(e) =>{
-                                    e.preventDefault();
-                                    prevStep()
-                                }}>
-                                <ArrowBigLeft/>
-                                Previous
-                            </button>
-                            <button 
-                                className='bg-primary rounded px-6 py-2 text-white flex flex-cols items-center gap-2'
-                                >
-                                <Save/>    
-                                Save to Records
-                            </button>
-
-                        </div>
-
-
-                    </>
-                )}
-
-            </form>
+                            </>
+                        )}
+                    </form>
                 </div>
             </div>
         </div>
     )
-    }
+}
 
-    export default AddtoRecords
+export default AddtoRecords
