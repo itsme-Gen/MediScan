@@ -40,7 +40,7 @@ const ScanID = () => {
 
         try {
             // Classify the uploaded image
-            const classifyResponse = await axios.post("http://localhost:8000/classify", formData, {
+            const classifyResponse = await axios.post("http://localhost:5050/classify", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
@@ -72,7 +72,9 @@ const ScanID = () => {
             } else {
                 setSuccessMessage(" OCR extraction complete!");
                 // Navigate to results page with extracted data
-                navigate("/ocr", { state: { image, extractedData: ocrResponse.data } });
+                localStorage.setItem("saveData",JSON.stringify(ocrResponse.data))
+                localStorage.setItem("saveImage",image!)
+                navigate("/ocr");
             }
 
         } catch (error) {
@@ -155,14 +157,14 @@ const ScanID = () => {
                                 </button>
                             </div>
 
-                            {/* ⚠️ Error Message */}
+                            {/*Error Message */}
                             {errorMessage && (
                                 <div className="bg-red-100 text-red-700 p-3 mt-4 rounded-md text-center text-sm font-semibold">
                                     {errorMessage}
                                 </div>
                             )}
 
-                            {/* ✅ Success Message */}
+                            {/*Success Message */}
                             {successMessage && (
                                 <div className="bg-green-100 text-green-700 p-3 mt-4 rounded-md text-center text-sm font-semibold">
                                     {successMessage}

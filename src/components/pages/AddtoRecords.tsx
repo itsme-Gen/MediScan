@@ -1,10 +1,19 @@
-    import React, { useState } from 'react'
+    import React, { useEffect, useState } from 'react'
     import Appbar from '../props/Appbar'
     import { Activity, ActivitySquare, ArrowBigLeft, ArrowBigRight, CircleUser, Dna, Heart, HeartPulse,
-        Phone, Pill, Stethoscope, Syringe, ThermometerSnowflake, User, UserPlus, Wind } from 'lucide-react'
+        Phone, Pill, Save, Stethoscope, Syringe, ThermometerSnowflake, User, UserPlus, Wind } from 'lucide-react'
     import Sidebar from '../props/Sidebar'
 
     const AddtoRecords = () => {
+        const [formData,setFormData] = useState<any>({})
+        useEffect(()=>{
+            const dataa = localStorage.getItem("saveFormData")
+
+            if(dataa){
+                setFormData(JSON.parse(dataa))
+            }
+        })
+
         const[step, setStep] = useState<number>(1);
 
         const nextStep = (()=>{
@@ -32,7 +41,7 @@
                 <div className="medical-info p-15 ">
                     <div className="title ">
                         <h1 className='text-4xl font-semibold text-primary'>Medical Information</h1>
-                        <p className='text-secondary'>Complete patient medical profile for Maria Santos Dela Cruz</p>
+                        <p className='text-secondary'>Complete patient medical profile for {formData.firstName} {formData.middleName} {formData.lastName}</p>
                     </div>
 
                     <div className="patient-info-card border border-gray-300 mt-10 rounded-lg">
@@ -44,22 +53,22 @@
                         <div className="patient-info flex flex-wrap justify-between px-10 mb-10">
                                 <div className="full-name">
                                     <h3 className='font-semibold'>Full Name</h3>
-                                    <p>Maria Santos Dela Cruz</p>
+                                    <p>{formData.firstName} {formData.middleName} {formData.lastName}</p>
                                 </div>
 
                                 <div className="birthDate">
                                     <h3 className='font-semibold'>BirthDate</h3>
-                                    <p>1990-01-29</p>
+                                    <p>{formData.birthDate}</p>
                                 </div>
 
                                 <div className="gender">
                                     <h1 className='font-semibold'>Gender</h1>
-                                    <p>Female</p>
+                                    <p>{formData.gender}</p>
                                 </div>
 
                                 <div className="idNumber">
                                     <h3 className='font-semibold'>ID Number</h3>
-                                    <p>123456789</p>
+                                    <p>{formData.idNumber}</p>
                                 </div>
                         </div>
                     </div>
@@ -228,73 +237,80 @@
                         </div>
                     </div>
 
-                    {/*Medication*/}
-
-                    <div className="medication-info-card border border-gray-300 mt-10 rounded-lg">
+                        -+{/*Medication*/}
+                        <div className="medication-info-card border border-gray-300 mt-10 rounded-lg">
                             <div className="title flex flex-col m-5">
-                                <div className="main-text flex flex-cols items-center gap-2">
-                                    <Pill className='text-secondary h-5'/>
-                                    <h3 className='text-2xl font-semibold text-primary'>Current Medication</h3>
-                                </div>
-
-                                <div className="sub-text">
-                                    <p className='text-sm text-gray-500'><em>Type N/A if not applicable</em></p>
-                                </div>
+                            <div className="main-text flex flex-cols items-center gap-2">
+                            <Pill className="text-secondary h-5" />
+                            <h3 className="text-2xl font-semibold text-primary">Current Medication</h3>
                             </div>
 
-                            <div className="medication-info flex justify-center mb-10">
-                                <div className="grid-container gap-3 grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] w-[90%]"> 
-
-                                    <div className="container">
-                                        <label className='text-sm font-semibold' htmlFor="medicationName">Medication Name</label>
-                                        <input
-                                        name='medicationName'
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        type='text'
-                                        placeholder='Medication Name'
-                                        />
-                                    </div>
-                                
-                                <div className="container">
-                                        <label className='text-sm font-semibold' htmlFor="dateStarted">Data Started</label>
-                                        <input
-                                        name='dateStarted'
-                                        className='p-2 rounded border border-gray-500 outline-primary w-[190px]'
-                                        type='date'
-                                        placeholder='Date started'
-                                        />
-                                    </div>
-
-                                <div className="container flex flex-col">
-                                        <label className='text-sm font-semibold' htmlFor="dosage">Dosage</label>
-                                        <input
-                                        name='dosage'
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        type='text'
-                                        placeholder='Dosage'
-                                        />
-                                    </div>
-
-                                    <div className="container">
-                                        <label className='text-sm font-semibold' htmlFor="frequency">Frequency</label>
-                                        <input
-                                        name='frequency'
-                                        className='p-2 rounded border border-gray-500 outline-primary'
-                                        type='text'
-                                        placeholder='Frequency'
-                                        />
-                                    </div>
-
-                                    <div className="container">
-                                        <button 
-                                        className='bg-primary p-2 rounded border border-gray-500 outline-primary w-full text-white text-md'
-                                        >
-                                        +
-                                        </button>
-                                    </div>
-                                
-                                </div>
+                            <div className="sub-text">
+                            <p className="text-sm text-gray-500">
+                                <em>Type N/A if not applicable</em>
+                            </p>
                             </div>
+                        </div>
+
+                        <div className="medication-info flex justify-center mb-10">
+                            <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-6 w-[90%]">
+                            <div className="container flex flex-col">
+                                <label className="text-sm font-semibold" htmlFor="medicationName">
+                                Medication Name
+                                </label>
+                                <input
+                                name="medicationName"
+                                className="p-2 rounded border border-gray-500 outline-primary"
+                                type="text"
+                                placeholder="Medication Name"
+                                />
+                            </div>
+
+                            <div className="container flex flex-col">
+                                <label className="text-sm font-semibold" htmlFor="dateStarted">
+                                Date Started
+                                </label>
+                                <input
+                                name="dateStarted"
+                                className="p-2 rounded border border-gray-500 outline-primary"
+                                type="date"
+                                />
+                            </div>
+
+                            <div className="container flex flex-col">
+                                <label className="text-sm font-semibold" htmlFor="dosage">
+                                Dosage
+                                </label>
+                                <input
+                                name="dosage"
+                                className="p-2 rounded border border-gray-500 outline-primary"
+                                type="text"
+                                placeholder="Dosage"
+                                />
+                            </div>
+
+                            <div className="container flex flex-col">
+                                <label className="text-sm font-semibold" htmlFor="frequency">
+                                Frequency
+                                </label>
+                                <input
+                                name="frequency"
+                                className="p-2 rounded border border-gray-500 outline-primary"
+                                type="text"
+                                placeholder="Frequency"
+                                />
+                            </div>
+
+                            <div className="container mt-auto flex flex-col justify-end">
+                                <button
+                                type="button"
+                                className="bg-primary p-2 rounded border border-gray-500 outline-primary w-full text-white text-md hover:bg-primary/90 transition"
+                                >
+                                +
+                                </button>
+                            </div>
+                            </div>
+                        </div>
                         </div>
                             <div className="button-container flex justify-center items-center m-5">
                             <button 
@@ -430,7 +446,7 @@
                                 <div className="grid-container grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] w-[90%] gap-5">
 
                                     <div className="container flex flex-col">
-                                        <label className='text-sm font-bold' htmlFor="allergyName">Allergy Name</label>
+                                        <label className='text-sm font-semibold' htmlFor="allergyName">Allergy Name</label>
                                         <input 
                                         id='allergyName'
                                         className='p-2 rounded border border-gray-500 outline-primary'
@@ -440,7 +456,7 @@
                                     </div>
 
                                     <div className="container flex flex-col">
-                                        <label className='text-sm font-bold' htmlFor="allergyName">Allergy Type</label>
+                                        <label className='text-sm font-semibold' htmlFor="allergyName">Allergy Type</label>
                                         <input 
                                         id='allergyType'
                                         className='p-2 rounded border border-gray-500 outline-primary'
@@ -450,7 +466,7 @@
                                     </div>
 
                                     <div className="container flex flex-col">
-                                        <label className='text-sm font-bold' htmlFor="allergyReaction">Allergy Reaction</label>
+                                        <label className='text-sm font-semibold' htmlFor="allergyReaction">Allergy Reaction</label>
                                         <input 
                                         id='allergyReaction'
                                         className='p-2 rounded border border-gray-500 outline-primary'
@@ -471,7 +487,7 @@
                                         </select>
                                     </div>
 
-                                    <div className="container">
+                                    <div className="container mt-auto">
                                         <button 
                                         className='bg-primary p-2 rounded border border-gray-500 outline-primary w-full text-white text-md'
                                         >
@@ -501,7 +517,7 @@
                             <div className="labResult-info flex justify-center mb-10">
                                 <div className="grid-container grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] w-[90%] gap-5">
                                     <div className="container flex flex-col">
-                                        <label className='text-sm font-bold' htmlFor="testName">Test Name</label>
+                                        <label className='text-sm font-semibold' htmlFor="testName">Test Name</label>
                                         <input 
                                         id='testName'
                                         className='p-2 rounded border border-gray-500 outline-primary'
@@ -511,7 +527,7 @@
                                     </div>
 
                                     <div className="container flex flex-col">
-                                        <label className='text-sm font-bold' htmlFor="testDate">Date of Test</label>
+                                        <label className='text-sm font-semibold' htmlFor="testDate">Date of Test</label>
                                         <input 
                                         id='testDate'
                                         className='p-2 rounded border border-gray-500 outline-primary'
@@ -521,7 +537,7 @@
                                     </div>
 
                                     <div className="container flex flex-col">
-                                        <label className='text-sm font-bold' htmlFor="testResult">Test Result</label>
+                                        <label className='text-sm font-semibold' htmlFor="testResult">Test Result</label>
                                         <input 
                                         id='testResult'
                                         className='p-2 rounded border border-gray-500 outline-primary'
@@ -531,7 +547,7 @@
                                     </div>
 
                                     <div className="container flex flex-col">
-                                        <label className='text-sm font-bold' htmlFor="referenceRange">Reference Rnage</label>
+                                        <label className='text-sm font-semibold' htmlFor="referenceRange">Reference Range</label>
                                         <input 
                                         id='referenceRange'
                                         className='p-2 rounded border border-gray-500 outline-primary'
@@ -541,7 +557,7 @@
                                     </div>
 
                                     <div className="container flex flex-col">
-                                        <label className='text-sm font-bold' htmlFor="testFlag">Flag</label>
+                                        <label className='text-sm font-semibold' htmlFor="testFlag">Flag</label>
                                         <select 
                                         className='p-2 rounded border border-gray-500 outline-primary'
                                         name="testFlag" id="testFlag">
@@ -583,7 +599,7 @@
                                 <div className="grid-container grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] w-[90%] gap-5">
                                     
                                     <div className="container flex flex-col">
-                                        <label className='text-sm font-bold' htmlFor="vaccineName">Name of Vaccine</label>
+                                        <label className='text-sm font-semibold' htmlFor="vaccineName">Name of Vaccine</label>
                                         <input 
                                         id='vaccineName'
                                         className='p-2 rounded border border-gray-500 outline-primary'
@@ -593,7 +609,7 @@
                                     </div>
 
                                     <div className="container flex flex-col">
-                                        <label className='text-sm font-bold' htmlFor="dateGiven">Date Given</label>
+                                        <label className='text-sm font-semibold' htmlFor="dateGiven">Date Given</label>
                                         <input 
                                         id='dateGiven'
                                         className='p-2 rounded border border-gray-500 outline-primary'
@@ -602,7 +618,7 @@
                                     </div>
 
                                     <div className="container flex flex-col">
-                                        <label className='text-sm font-bold' htmlFor="nextDue">Next Due</label>
+                                        <label className='text-sm font-semibold' htmlFor="nextDue">Next Due</label>
                                         <input 
                                         id='nextDue'
                                         className='p-2 rounded border border-gray-500 outline-primary'
@@ -611,7 +627,7 @@
                                     </div>
 
                                     <div className="container flex flex-col">
-                                        <label className='text-sm font-bold' htmlFor="givenBy">Given By</label>
+                                        <label className='text-sm font-semibold' htmlFor="givenBy">Given By</label>
                                         <input 
                                         id='givenBy'
                                         className='p-2 rounded border border-gray-500 outline-primary'
@@ -680,7 +696,7 @@
                                 <div className="grid-container grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] w-[90%] gap-5">
                                     
                                     <div className="container flex flex-col">
-                                        <label className='text-sm font-bold' htmlFor="medicationName">Medication Name</label>
+                                        <label className='text-sm font-semibold' htmlFor="medicationName">Medication Name</label>
                                         <input 
                                         id='medicationName'
                                         className='p-2 rounded border border-gray-500 outline-primary'
@@ -691,7 +707,7 @@
 
                                     
                                     <div className="container flex flex-col">
-                                        <label className='text-sm font-bold' htmlFor="dosage">Dosage</label>
+                                        <label className='text-sm font-semibold' htmlFor="dosage">Dosage</label>
                                         <input 
                                         id='dosage'
                                         className='p-2 rounded border border-gray-500 outline-primary'
@@ -702,7 +718,7 @@
 
                                     
                                     <div className="container flex flex-col">
-                                        <label className='text-sm font-bold' htmlFor="quantity">Quantity</label>
+                                        <label className='text-sm font-semibold' htmlFor="quantity">Quantity</label>
                                         <input 
                                         id='quantity'
                                         className='p-2 rounded border border-gray-500 outline-primary'
@@ -713,7 +729,7 @@
 
                                     
                                     <div className="container flex flex-col">
-                                        <label className='text-sm font-bold' htmlFor="datePrescribe">Date of Prescribe</label>
+                                        <label className='text-sm font-semibold' htmlFor="datePrescribe">Date of Prescribe</label>
                                         <input 
                                         id='datePrescribed'
                                         className='p-2 rounded border border-gray-500 outline-primary'
@@ -723,7 +739,7 @@
 
                                     
                                     <div className="container flex flex-col">
-                                        <label className='text-sm font-bold' htmlFor="prescribeBy">Prescribe By</label>
+                                        <label className='text-sm font-semibold' htmlFor="prescribeBy">Prescribe By</label>
                                         <input 
                                         id='prescribeBy'
                                         className='p-2 rounded border border-gray-500 outline-primary'
@@ -771,7 +787,17 @@
                         <div className="button-container flex justify-center items-center m-5 gap-4">
                             <button 
                                 className='bg-primary rounded px-6 py-2 text-white flex flex-cols items-center gap-2'
+                                 onClick={(e) =>{
+                                    e.preventDefault();
+                                    prevStep()
+                                }}>
+                                <ArrowBigLeft/>
+                                Previous
+                            </button>
+                            <button 
+                                className='bg-primary rounded px-6 py-2 text-white flex flex-cols items-center gap-2'
                                 >
+                                <Save/>    
                                 Save to Records
                             </button>
 
