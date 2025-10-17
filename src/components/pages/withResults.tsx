@@ -3,40 +3,31 @@ import Sidebar from "../props/Sidebar";
 import Appbar from "../props/Appbar";
 import {
   Calendar,
+  CircleCheck,
   CircleUser,
-  CircleX,
   Home,
   IdCard,
-  Plus,
   RotateCcw,
-  TriangleAlert,
   User,
   VenusAndMars,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const NoResults = () => {
+const withResults = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState<any>(null);
 
-  //Navigate to registration page
-  const register = () => {
-    window.scrollTo(0, 0);
-    navigate("/addtorecords");
-  };
-
   //Navigate back and clear storage
   const scanAgain = () => {
+    localStorage.removeItem("saveData");
     localStorage.removeItem("saveFormData")
-    localStorage.removeItem("saveData")
-    localStorage.removeItem("saveImage")
-    localStorage.removeItem("medicalHistory")
     window.scrollTo(0, 0);
     navigate("/scanid");
   };
 
- 
+
   useEffect(() => {
     const saveFormData= localStorage.getItem("saveFormData");
     if (saveFormData) {
@@ -67,21 +58,21 @@ const NoResults = () => {
         </div>
 
         <div className="container flex justify-center mb-10">
-          <div className="no-result-card flex flex-cols items-center justify-between w-[90%] border border-yellow-500 rounded-xl p-5">
+          <div className="no-result-card flex flex-cols items-center justify-between w-[90%] border border-green-500 rounded-xl p-5">
             <div className="container flex flex-cols items-center gap-5">
               <div className="icon-container">
-                <CircleX className="text-yellow-500 h-20 w-10" />
+                <CircleCheck className="text-green-500 h-20 w-10" />
               </div>
               <div className="text-message">
-                <h3 className="font-bold text-xl">No Match found</h3>
+                <h3 className="font-bold text-xl">Patient Record Found</h3>
                 <p className="text-gray-500">
-                  This patient is not in our database. Registration required
+                    Existing patient record has been located and verified.
                 </p>
               </div>
             </div>
 
-            <div className="status w-25 border border-gray-400 text-center rounded-lg">
-              <h3 className="text-sm">New Patient</h3>
+            <div className="status w-30 p-1 text-center rounded-lg bg-secondary">
+              <h3 className="text-sm text-white">Existing Patient</h3>
             </div>
           </div>
         </div>
@@ -156,59 +147,71 @@ const NoResults = () => {
           <div className="container border border-gray-300 p-5 rounded-lg">
             <div className="registration">
               <div className="label mb-5">
-                <h1 className="text-2xl font-semibold">Registration Required</h1>
+                <h1 className="text-2xl font-semibold">Patient Summary</h1>
                 <p className="text-sm text-gray-500">
-                  Complete registration for new patient
+                  Overview of Existing patient record
                 </p>
               </div>
 
-              <div className="warning-container flex flex-col gap-3 bg-yellow-100 p-4 rounded-lg">
+              <div className="warning-container flex flex-col gap-3 bg-green-100 p-4 rounded-lg">
                 <div className="label flex flex-cols items-center gap-2">
-                  <TriangleAlert className="text-yellow-500 h-5" />
+                  <CircleCheck className="text-green-500 h-5" />
                   <h3 className="text-md font-semibold">
-                    New Patient Registration
+                    Patient Verified
                   </h3>
                 </div>
 
                 <div className="text-message">
                   <p className="text-sm text-gray-500">
-                    This patient is not found in our system. Please proceed to
-                    new patient registration
+                    Patient record successfully matched and verified.
                   </p>
                 </div>
               </div>
 
-              <div className="next-step-container mt-5">
-                <h3 className="text-md font-semibold">Next Step:</h3>
-                <ul className="list-disc list-inside">
-                  <li className="text-gray-600">Complete the medical Form</li>
-                  <li className="text-gray-600">
-                    Verify Insurance Information
-                  </li>
-                  <li className="text-gray-600">Setup Emergency Contacts</li>
-                  <li className="text-gray-600">
-                    Schedule Initial Consultation
-                  </li>
-                </ul>
+
+              <div className="summary w-full flex flex-col gap-5 mt-5">
+                <div className="conditon_name flex flex-row justify-between">
+                    <h3 className="text-sm">Condition Name:</h3>
+                    <p className="text-sm font-semibold">Hypertension</p>
+                </div>
+
+                <div className="Condition_type flex flex-row justify-between">
+                    <h3 className="text-sm">Condition Type:</h3>
+                    <p className="text-sm font-semibold">Chronic</p>
+                </div>
+
+                <div className="severity flex flex-row justify-between">
+                  <h3 className="text-sm">Severity:</h3>
+                  <p className="text-sm font-semibold">Moderate</p>
+                </div>
+
+                <div className="status flex flex-row justify-between">
+                  <h3 className="text-sm">Status:</h3>
+                  <p className="text-sm font-semibold">Resolved</p>
+                </div>
               </div>
+           
             </div>
           </div>
         </div>
 
         <div className="button-container flex justify-center border border-gray-300 rounded-lg mb-10 mx-10 p-8">
-          <div className="buttons flex gap-10">
+          <div className="buttons flex gap-5">
             <button
               onClick={scanAgain}
               className="flex flex-cols items-center border border-gray-400 rounded-sm p-3 hover:bg-gray-100"
             >
               <RotateCcw className="h-5" /> Scan Again
             </button>
+
             <button
-              onClick={register}
-              className="flex flex-cols items-center bg-secondary text-white p-3 rounded-sm hover:bg-primary"
-            >
-              <Plus /> Register new Patient
+              className="flex flex-cols items-center text-white bg-secondary rounded-sm p-3"
+                >
+             View Full Medical Record
             </button>
+
+            <button></button>
+
           </div>
         </div>
       </div>
@@ -216,4 +219,4 @@ const NoResults = () => {
   );
 };
 
-export default NoResults;
+export default withResults;

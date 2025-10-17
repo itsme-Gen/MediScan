@@ -11,6 +11,7 @@ const AddtoRecords = () => {
     // Extracted data 
     const [formData, setFormData] = useState<any>({})
 
+
     useEffect(() => {
         const data = localStorage.getItem("saveFormData")
         if (data) setFormData(JSON.parse(data))
@@ -81,43 +82,94 @@ const AddtoRecords = () => {
     }
 
   const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    const saveData = {
-        formData,
-        contact,
-        reasonForVisit,
-        vitalSigns,
-        medications,
-        medicalHistory,
-        allergies,
-        labResults,
-        prescriptions
-    }
+  e.preventDefault();
 
-    try {
-        const response = await axios.post("http://localhost:9090/sentData", saveData)
-        console.log("This is a response", response)
+  const saveData = {
+    patient: {
+      first_name: formData.firstName,
+      middle_name: formData.middleName,
+      last_name: formData.lastName,
+      id_number: formData.idNumber,
+      date_of_birth: formData.birthDate,
+      gender: formData.gender,
+      contact_number: contact.contactNumber,
+      email_address: contact.emailAddress,
+      home_address: contact.homeAddress,
+      emergency_contact_number: contact.emergencyContact,
+    },
+    visit: {
+      reason_for_visit: reasonForVisit,
+    },
+    vitalSigns: {
+      body_temperature: vitalSigns.bodyTemperature,
+      heart_pulse: vitalSigns.heartPulse,
+      respiratory_rate: vitalSigns.respiratoryRate,
+      blood_pressure: vitalSigns.bloodPressure
+    },
+    medications: medications.map(m => ({
+      medication_name: m.medicationName,
+      start_date: m.dateStarted,
+      dosage: m.dosage,
+      frequency: m.frequency
+    })),
+    medicalHistory: medicalHistory.map(mh => ({
+      condition_name: mh.conditionName,
+      diagnosis_date: mh.diagnosedDate,
+      condition_type: mh.conditionType,
+      severity: mh.severity,
+      status: mh.conditionStatus,
+      resolution_date: mh.resolutionDate
+    })),
+    allergies: allergies.map(a => ({
+      allergen_name: a.allergyName,
+      allergy_type: a.allergyType,
+      reaction: a.allergyReaction,
+      severity: a.severity
+    })),
+    labResults: labResults.map(lr => ({
+      test_name: lr.testName,
+      test_date: lr.testDate,
+      test_result: lr.testResult,
+      reference_range: lr.referenceRange,
+      abnormal_flag: lr.testFlag
+    })),
+    prescriptions: prescriptions.map(p => ({
+      medication_name: p.medicationName,
+      dosage: p.dosage,
+      quantity: p.quantity,
+      date_prescribed: p.datePrescribed,
+      prescribing_provider: p.prescribeBy,
+      frequency: "" // optional field; backend expects it
+    }))
+  };
 
-        setContact({ emailAddress: '', homeAddress: '', contactNumber: '', emergencyContact: '' })
-        setReasonForVisit('')
-        setVitalSigns({ bodyTemperature: "", heartPulse: "", respiratoryRate: "", bloodPressure: "" })
-        setMedications([{ medicationName: "", dateStarted: "", dosage: "", frequency: "" }])
-        setMedicalHistory([{ conditionName: "", diagnosedDate: "", conditionType: "", severity: "", conditionStatus: "", resolutionDate: "" }])
-        setAllergies([{ allergyName: "", allergyType: "", allergyReaction: "", severity: "" }])
-        setLabResults([{ testName: "", testDate: "", testResult: "", referenceRange: "", testFlag: "" }])
-        setPrescriptions([{ medicationName: "", dosage: "", quantity: "", datePrescribed: "", prescribeBy: "" }])
+  try {
+    const response = await axios.post("http://localhost:9090/savePatientData", saveData);
+    console.log("Response:", response.data);
 
-        // Optionally clear localStorage too
-        localStorage.removeItem("saveFormData")
-        console.log("savedata:",saveData)
-        alert("Record saved successfully!")
-        setStep(1) // reset to the first step if multi-step
-    } catch (error) {
-        console.log('Error', error)
-        alert("Failed to save record.")
-    }
-}
+    alert("Record saved successfully!");
+    localStorage.removeItem("saveFormData")
+    localStorage.removeItem("saveData")
+    localStorage.removeItem("saveImage")
+    localStorage.removeItem("medicalHistory")
+
+    // Reset all form fields
+    setContact({ emailAddress: '', homeAddress: '', contactNumber: '', emergencyContact: '' });
+    setReasonForVisit('');
+    setVitalSigns({ bodyTemperature: "", heartPulse: "", respiratoryRate: "", bloodPressure: "" });
+    setMedications([{ medicationName: "", dateStarted: "", dosage: "", frequency: "" }]);
+    setMedicalHistory([{ conditionName: "", diagnosedDate: "", conditionType: "", severity: "", conditionStatus: "", resolutionDate: "" }]);
+    setAllergies([{ allergyName: "", allergyType: "", allergyReaction: "", severity: "" }]);
+    setLabResults([{ testName: "", testDate: "", testResult: "", referenceRange: "", testFlag: "" }]);
+    setPrescriptions([{ medicationName: "", dosage: "", quantity: "", datePrescribed: "", prescribeBy: "" }]);
+    setStep(1);
+
+  } catch (error) {
+    console.error("Error saving data:", error);
+    alert("Failed to save record. Check server logs for details.");
+  }
+};
+
 
     return (
         <div className='addToRecords h-screen'>

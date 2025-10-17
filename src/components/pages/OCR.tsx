@@ -68,7 +68,15 @@ const OCR = () => {
         navigate("/noresults");
         console.log("Patient Not Found");
       } else {
-        console.log("Patient Found", response.data.patient);
+        localStorage.setItem("saveFormData", JSON.stringify(formData))
+        console.log("Save Data", formData)
+        navigate("/results")
+        const patient = response.data.patient
+        console.log("Patient Found", patient);
+
+        const medicalHistory = await axios.get(`http://localhost:8080/medical_history/${patient.patient_id}`)
+        localStorage.setItem("medicalHistory", medicalHistory.data)
+        console.log("Medical History",medicalHistory.data)
       }
     } catch (error: any) {
       if (error.response && error.response.status === 500) {
@@ -82,6 +90,7 @@ const OCR = () => {
     localStorage.removeItem("saveFormData")
     localStorage.removeItem("saveData")
     localStorage.removeItem("saveImage")
+    localStorage.removeItem("medicalHistory")
     navigate("/scanid")
   });
   const toAddToRecords = () => navigate("/addtorecords");
@@ -288,14 +297,6 @@ const OCR = () => {
             >
               <Search className="h-4 w-4" />
               Search Record
-            </button>
-
-            <button
-              onClick={toAddToRecords}
-              className="bg-secondary p-2 rounded-md text-white font-semibold text-sm flex items-center justify-center gap-2"
-            >
-              <UserPlus className="h-4 w-4" />
-              Add to Records
             </button>
           </div>
 

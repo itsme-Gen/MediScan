@@ -8,10 +8,18 @@ const dashboardProps:React.FC = () => {
     const navigate = useNavigate()
 
     const toDashboard = (() =>{
+        localStorage.removeItem("saveFormData")
+        localStorage.removeItem("saveData")
+        localStorage.removeItem("saveImage")
+        localStorage.removeItem("medicalHistory")
         navigate("/dashboard")
     })
 
     const toScanId = (() =>{
+        localStorage.removeItem("saveFormData")
+        localStorage.removeItem("saveData")
+        localStorage.removeItem("saveImage")
+        localStorage.removeItem("medicalHistory")
         navigate("/scanid")
     })
     
