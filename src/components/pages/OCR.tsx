@@ -93,7 +93,6 @@ const OCR = () => {
     localStorage.removeItem("medicalHistory")
     navigate("/scanid")
   });
-  const toAddToRecords = () => navigate("/addtorecords");
 
   return (
     <div className="ocr-result">

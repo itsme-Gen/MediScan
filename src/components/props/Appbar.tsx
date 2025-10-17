@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Home, Settings, User, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface AppbarProps {
   title: string;
@@ -25,7 +26,6 @@ const Appbar: React.FC<AppbarProps> = ({
   const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -38,11 +38,11 @@ const Appbar: React.FC<AppbarProps> = ({
 
   // Handle logout click
   const handleLogout = () => {
-    // Clear token + user info from localStorage
+    
     localStorage.removeItem("authToken");
     localStorage.removeItem("userEmail");
+    toast.success("Log out successfull")
 
-    // Optional: Notify parent (Dashboard) if prop provided
     if (onLogout) {
       onLogout();
     }

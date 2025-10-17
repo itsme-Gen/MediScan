@@ -8,6 +8,8 @@ import OCR from "./components/pages/OCR";
 import AddtoRecords from "./components/pages/AddtoRecords";
 import NoResults from "./components/pages/noResult";
 import WithResults from "./components/pages/withResults";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Protected Route Component
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
@@ -26,7 +28,6 @@ const App: React.FC = () => {
     }
   }, []);
 
-  // Logout function clears token and updates state
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("userEmail");
@@ -37,13 +38,11 @@ const App: React.FC = () => {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          {/* Default route redirects to /dashboard if logged in */}
           <Route
             path="/"
             element={<Navigate to={isLoggedIn ? "/dashboard" : "/login"} />}
           />
 
-          {/* Public routes */}
           <Route
             path="/login"
             element={<Login onLogin={() => setLoggedIn(true)} />}
@@ -102,6 +101,16 @@ const App: React.FC = () => {
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 };

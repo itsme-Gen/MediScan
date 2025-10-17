@@ -5,6 +5,7 @@ import { Stethoscope } from "lucide-react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 interface LoginProps {
   onLogin: () => void;
@@ -15,32 +16,30 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false); // ✅ Track password visibility
 
   const navigate = useNavigate();
 
-  //Check token when component mounts
+  // Check token on mount
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (token) {
-      navigate("/dashboard"); // redirect if already logged in
+      navigate("/dashboard");
     }
   }, [navigate]);
 
-  //Handle input change
+  // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  //Handle form submit
+  // Handle form submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!formData.email || !formData.password) {
-      alert("All fields are required");
+      toast.error("All fields are required");
       return;
     }
 
@@ -48,38 +47,39 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       const response = await axios.post("http://localhost:5000/signin", formData);
 
       if (response.status === 200) {
-        const { token } = response.data; // <-- Make sure backend sends token
+        const { token,user } = response.data;
 
-        if (token) {
-          //Save token to localStorage
+        if (token && user) {
           localStorage.setItem("authToken", token);
           localStorage.setItem("userEmail", formData.email);
 
           onLogin();
           navigate("/dashboard");
-          alert("Login Successful!");
+          toast.success("Login Successful");
         } else {
-          alert("No token received from server!");
+          console.log("No token received from server");
         }
       }
     } catch (error: any) {
       if (error.response) {
         const status = error.response.status;
+        toast.dismiss();
         switch (status) {
           case 400:
-            alert("Email and Password are required");
+            toast.error("Email and Password are required");
             break;
           case 401:
-            alert("Invalid Email or Password");
+            toast.error("Invalid Email or Password");
             break;
           case 500:
-            alert("Server Error");
+            toast.error("Server Error");
             break;
           default:
-            alert("Unexpected Error");
+            toast.error("Unexpected Error");
         }
       } else {
-        alert("Network Error. Please try again.");
+        toast.dismiss();
+        toast.error("Network Error. Please try again.");
       }
     }
   };
@@ -112,13 +112,24 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           <label htmlFor="password">Password</label>
           <TextField
             required
-            type="password"
+            type={showPassword ? "text" : "password"}
             name="password"
             onChange={handleChange}
             value={formData.password}
             label="Password"
             variant="outlined"
             fullWidth
+            InputProps={{
+              endAdornment: (
+                <Button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  style={{ textTransform: "none", minWidth: "auto", padding: "0 8px" }}
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </Button>
+              ),
+            }}
           />
 
           <Button variant="contained" fullWidth className="!bg-primary !mt-4" type="submit">
@@ -152,6 +163,8 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           />
         </div>
       </div>
+
+      <style>{`input::-ms-reveal { display: none; }`}</style>
     </div>
   );
 };

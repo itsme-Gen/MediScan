@@ -6,10 +6,13 @@ import {
 } from 'lucide-react'
 import Sidebar from '../props/Sidebar'
 import axios from 'axios'
+import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 const AddtoRecords = () => {
     // Extracted data 
     const [formData, setFormData] = useState<any>({})
+    const navigate = useNavigate()
 
 
     useEffect(() => {
@@ -147,11 +150,13 @@ const AddtoRecords = () => {
     const response = await axios.post("http://localhost:9090/savePatientData", saveData);
     console.log("Response:", response.data);
 
-    alert("Record saved successfully!");
     localStorage.removeItem("saveFormData")
     localStorage.removeItem("saveData")
     localStorage.removeItem("saveImage")
     localStorage.removeItem("medicalHistory")
+    toast.dismiss()
+    toast.success("Record saved successfully!")
+    navigate("/dashboard")
 
     // Reset all form fields
     setContact({ emailAddress: '', homeAddress: '', contactNumber: '', emergencyContact: '' });
@@ -166,7 +171,7 @@ const AddtoRecords = () => {
 
   } catch (error) {
     console.error("Error saving data:", error);
-    alert("Failed to save record. Check server logs for details.");
+    toast.error("Failed to save record. Check server logs for details.");
   }
 };
 
