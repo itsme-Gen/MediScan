@@ -44,12 +44,12 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/signin", formData);
+      const response = await axios.post("http://localhost:8000/signin", formData);
 
       if (response.status === 200) {
-        const { token,user } = response.data;
+        const { token } = response.data;
 
-        if (token && user) {
+        if (token) {
           localStorage.setItem("authToken", token);
           localStorage.setItem("userEmail", formData.email);
 

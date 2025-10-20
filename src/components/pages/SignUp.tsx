@@ -33,8 +33,7 @@ const SignUp: React.FC = () => {
   // Track password visibility
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  // Single-toast flag
+  
   const [toastActive, setToastActive] = useState(false);
 
   // Step 1 validation
@@ -78,7 +77,7 @@ const SignUp: React.FC = () => {
     }
 
     try {
-      await axios.post("http://localhost:5000/register", formData);
+      await axios.post("http://localhost:8000/register", formData);
       toast.success("Successfully Registered");
       navigate('/login');
     } catch (error) {

@@ -50,7 +50,7 @@ const OCR = () => {
   const toggleEdit = () => setDisabled(prev => !prev);
 
   //Handle form changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -58,7 +58,7 @@ const OCR = () => {
   //Search for patient records
   const searchRecords = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/verify", {
+      const response = await axios.post("http://localhost:9090/verify", {
         idNumber: formData.idNumber,
       });
 
@@ -71,11 +71,14 @@ const OCR = () => {
         localStorage.setItem("saveFormData", JSON.stringify(formData))
         console.log("Save Data", formData)
         navigate("/results")
-        const patient = response.data.patient
-        console.log("Patient Found", patient);
 
-        const medicalHistory = await axios.get(`http://localhost:8080/medical_history/${patient.patient_id}`)
-        localStorage.setItem("medicalHistory", medicalHistory.data)
+        const patientId = response.data.patient._id
+
+        console.log("This is the id",patientId)
+        
+
+        const medicalHistory = await axios.get(`http://localhost:5000/medicalhistory/patients/${patientId}`)
+        localStorage.setItem("medicalHistory", JSON.stringify(medicalHistory.data))
         console.log("Medical History",medicalHistory.data)
       }
     } catch (error: any) {
@@ -263,25 +266,29 @@ const OCR = () => {
                 >
                   <VenusAndMars className="h-4 w-4" /> Gender
                 </label>
-                <input
-                  type="text"
+
+                <select
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
-                  placeholder="Gender"
                   disabled={isDisabled}
                   className={`${
                     isDisabled ? "bg-gray-200 cursor-not-allowed" : "bg-white border border-gray-500"
                   } rounded-lg p-3 outline-none`}
-                />
+                >
+                  <option value="">{formData.gender}</option>
+                  <option value="MALE">MALE</option>
+                  <option value="FEMALE">FEMALE</option>
+                </select>
               </div>
+
             </div>
           </div>
         </div>
 
         {/* Bottom Buttons */}
         <div className="button-container flex flex-col justify-center items-center mx-15 my-5 border border-gray-300 p-5 rounded-xl">
-          <div className="buttons grid grid-cols-3 gap-4 w-[50%]">
+          <div className="buttons grid grid-cols-2 gap-4 w-[50%]">
             <button
               onClick={scanAgain}
               className="border border-gray-400 p-2 rounded-md font-semibold text-sm flex items-center justify-center gap-2"

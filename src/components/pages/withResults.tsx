@@ -18,20 +18,27 @@ const withResults = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState<any>(null);
+  const [medicalHistory, setMedicalHistory] = useState<any>({})
 
   //Navigate back and clear storage
   const scanAgain = () => {
     localStorage.removeItem("saveData");
     localStorage.removeItem("saveFormData")
+    localStorage.removeItem("medicalHistory")
     window.scrollTo(0, 0);
     navigate("/scanid");
   };
 
 
   useEffect(() => {
-    const saveFormData= localStorage.getItem("saveFormData");
+    const saveFormData = localStorage.getItem("saveFormData");
     if (saveFormData) {
       setFormData(JSON.parse(saveFormData)); 
+    }
+
+    const medicalHistoryData = localStorage.getItem('medicalHistory') 
+    if (medicalHistoryData){
+      setMedicalHistory(JSON.parse(medicalHistoryData))
     }
   }, []);
 
@@ -149,16 +156,14 @@ const withResults = () => {
               <div className="label mb-5">
                 <h1 className="text-2xl font-semibold">Patient Summary</h1>
                 <p className="text-sm text-gray-500">
-                  Overview of Existing patient record
+                  Overview of Existing Patient Records
                 </p>
               </div>
 
               <div className="warning-container flex flex-col gap-3 bg-green-100 p-4 rounded-lg">
                 <div className="label flex flex-cols items-center gap-2">
                   <CircleCheck className="text-green-500 h-5" />
-                  <h3 className="text-md font-semibold">
-                    Patient Verified
-                  </h3>
+                  <h3 className="text-md font-semibold">Patient Verified</h3>
                 </div>
 
                 <div className="text-message">
@@ -168,32 +173,51 @@ const withResults = () => {
                 </div>
               </div>
 
+              <div className="summary mt-5 flex flex-col gap-5">
+                {medicalHistory.data && medicalHistory.data.length > 0 ? (
+                  medicalHistory.data.map((record: any) => (
+                    <div
+                      key={record._id}
+                      className="medical-record border border-gray-200 rounded-lg p-4 bg-gray-50"
+                    >
+                      <div className="flex flex-row justify-between mb-3">
+                        <h3 className="text-sm font-medium">Condition Name:</h3>
+                        <p className="text-sm font-semibold">{record.condition_name}</p>
+                      </div>
 
-              <div className="summary w-full flex flex-col gap-5 mt-5">
-                <div className="conditon_name flex flex-row justify-between">
-                    <h3 className="text-sm">Condition Name:</h3>
-                    <p className="text-sm font-semibold">Hypertension</p>
-                </div>
+                      <div className="flex flex-row justify-between mb-3">
+                        <h3 className="text-sm font-medium">Condition Type:</h3>
+                        <p className="text-sm font-semibold">{record.condition_type}</p>
+                      </div>
 
-                <div className="Condition_type flex flex-row justify-between">
-                    <h3 className="text-sm">Condition Type:</h3>
-                    <p className="text-sm font-semibold">Chronic</p>
-                </div>
+                      <div className="flex flex-row justify-between mb-3">
+                        <h3 className="text-sm font-medium">Severity:</h3>
+                        <p className="text-sm font-semibold">{record.severity}</p>
+                      </div>
 
-                <div className="severity flex flex-row justify-between">
-                  <h3 className="text-sm">Severity:</h3>
-                  <p className="text-sm font-semibold">Moderate</p>
-                </div>
+                      <div className="flex flex-row justify-between mb-3">
+                        <h3 className="text-sm font-medium">Status:</h3>
+                        <p className="text-sm font-semibold">{record.status}</p>
+                      </div>
 
-                <div className="status flex flex-row justify-between">
-                  <h3 className="text-sm">Status:</h3>
-                  <p className="text-sm font-semibold">Resolved</p>
-                </div>
+                      {record.resolution_date && (
+                        <div className="flex flex-row justify-between">
+                          <h3 className="text-sm font-medium">Resolution Date:</h3>
+                          <p className="text-sm font-semibold">
+                            {new Date(record.resolution_date).toLocaleDateString()}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-gray-500">No medical history found.</p>
+                )}
               </div>
-           
             </div>
           </div>
-        </div>
+          </div>
+
 
         <div className="button-container flex justify-center border border-gray-300 rounded-lg mb-10 mx-10 p-8">
           <div className="buttons flex gap-5">
