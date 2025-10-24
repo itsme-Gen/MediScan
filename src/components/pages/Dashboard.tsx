@@ -6,10 +6,8 @@ import Greetings from '../props/Greetings';
 import Card from "../props/Card"
 import BarGraph from '../props/BarGraph';
 
-interface LogoutProps{
-    onLogout:() => void
-}
-const Dashboard:React.FC<LogoutProps> = ({onLogout}) => {
+
+const Dashboard:React.FC = () => {
   return (
     <div className='dashboard flex h-screen'>
 

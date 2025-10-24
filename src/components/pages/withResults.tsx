@@ -12,7 +12,6 @@ import {
   VenusAndMars,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 const withResults = () => {
   const navigate = useNavigate();
@@ -28,6 +27,10 @@ const withResults = () => {
     window.scrollTo(0, 0);
     navigate("/scanid");
   };
+
+  const viewMedicalRecord = (()=>{
+    navigate("/fullmedicalrecords")
+  })
 
 
   useEffect(() => {
@@ -229,6 +232,7 @@ const withResults = () => {
             </button>
 
             <button
+              onClick={viewMedicalRecord}
               className="flex flex-cols items-center text-white bg-secondary rounded-sm p-3"
                 >
              View Full Medical Record

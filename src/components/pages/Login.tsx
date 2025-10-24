@@ -16,7 +16,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     email: "",
     password: "",
   });
-  const [showPassword, setShowPassword] = useState(false); // ✅ Track password visibility
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 

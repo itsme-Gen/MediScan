@@ -8,6 +8,7 @@ import OCR from "./components/pages/OCR";
 import AddtoRecords from "./components/pages/AddtoRecords";
 import NoResults from "./components/pages/noResult";
 import WithResults from "./components/pages/withResults";
+import FullRecords from "./components/pages/FullRecords";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -54,7 +55,7 @@ const App: React.FC = () => {
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <Dashboard onLogout={handleLogout} />
+                <Dashboard/>
               </ProtectedRoute>
             }
           />
@@ -95,6 +96,15 @@ const App: React.FC = () => {
             element={
               <ProtectedRoute>
                 <WithResults />
+              </ProtectedRoute>
+            }
+          />
+
+           <Route
+            path="/fullmedicalrecords"
+            element={
+              <ProtectedRoute>
+                <FullRecords />
               </ProtectedRoute>
             }
           />
