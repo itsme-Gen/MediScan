@@ -53,9 +53,6 @@ const withResults = () => {
         <Appbar
           iconTitle={Home}
           title="Verification Results"
-          firstName="Juan"
-          lastName="Dela Cruz"
-          role="Doctor"
           icon={CircleUser}
         />
 

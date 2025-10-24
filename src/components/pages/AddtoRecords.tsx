@@ -140,7 +140,7 @@ const AddtoRecords = () => {
                 quantity: p.quantity,
                 date_prescribed: p.datePrescribed,
                 prescribing_provider: p.prescribeBy,
-                frequency: p.frequnency
+                frequency: p.frequency
             }))
         };
 
@@ -178,9 +178,6 @@ const AddtoRecords = () => {
                 <Appbar
                     iconTitle={UserPlus}
                     title='Add to Records'
-                    firstName='Juan'
-                    lastName='Dela Cruz'
-                    role='Doctor'
                     icon={CircleUser}
                 />
 

@@ -47,11 +47,12 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       const response = await axios.post("http://localhost:8000/signin", formData);
 
       if (response.status === 200) {
-        const { token } = response.data;
+        const { token, user:{id} } = response.data;
 
         if (token) {
           localStorage.setItem("authToken", token);
           localStorage.setItem("userEmail", formData.email);
+          localStorage.setItem("userId",id)
 
           onLogin();
           navigate("/dashboard");

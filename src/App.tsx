@@ -9,6 +9,7 @@ import AddtoRecords from "./components/pages/AddtoRecords";
 import NoResults from "./components/pages/noResult";
 import WithResults from "./components/pages/withResults";
 import FullRecords from "./components/pages/FullRecords";
+import ChatAssistant from "./components/pages/ChatAssistant";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -105,6 +106,15 @@ const App: React.FC = () => {
             element={
               <ProtectedRoute>
                 <FullRecords />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/chatassistant"
+            element={
+              <ProtectedRoute>
+                <ChatAssistant />
               </ProtectedRoute>
             }
           />

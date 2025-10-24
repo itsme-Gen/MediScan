@@ -106,9 +106,6 @@ const OCR = () => {
           iconTitle={ScanText}
           icon={CircleUser}
           title="OCR Processing"
-          firstName="Juan"
-          lastName="Dela Cruz"
-          role="Doctor"
         />
 
         <div className="title flex flex-col justify-content items-center mt-5 p-5">

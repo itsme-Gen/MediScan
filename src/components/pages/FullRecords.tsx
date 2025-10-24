@@ -15,9 +15,6 @@ const FullRecords:React.FC= () => {
             <Appbar
                 iconTitle={NotepadText}
                 title='Full Medical Record'
-                firstName='Juan'
-                lastName='Dela Cruz'
-                role='Doctor'
                 icon={CircleUser}
             />
 

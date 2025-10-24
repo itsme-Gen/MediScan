@@ -92,9 +92,6 @@ const ScanID = () => {
                 <Appbar
                     iconTitle={Camera}
                     title='Scan ID'
-                    firstName='Juan'
-                    lastName='Dela Cruz'
-                    role='Doctor'
                     icon={CircleUser}
                 />
 

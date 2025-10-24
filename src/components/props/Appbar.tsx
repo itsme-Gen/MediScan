@@ -2,12 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { Home, Settings, User, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 interface AppbarProps {
   title: string;
-  firstName: string;
-  lastName: string;
-  role: string;
   icon: React.ElementType;
   iconTitle: React.ElementType;
   onLogout?: () => void; 
@@ -15,9 +13,6 @@ interface AppbarProps {
 
 const Appbar: React.FC<AppbarProps> = ({
   title,
-  firstName,
-  lastName,
-  role,
   icon: Icon,
   iconTitle: IconTitle,
   onLogout,
@@ -35,6 +30,28 @@ const Appbar: React.FC<AppbarProps> = ({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [role, setRole] = useState("");
+
+  const displayName = async () => {
+    const id = localStorage.getItem("userId");
+
+    try {
+      const response = await axios.get(`http://localhost:9000/employee/${id}`);
+      console.log("This is the response:", response.data);
+
+      setFirstName(response.data.user.firstName);
+      setLastName(response.data.user.lastName);
+      setRole(response.data.user.role);
+
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  displayName();
 
   // Handle logout click
   const handleLogout = () => {

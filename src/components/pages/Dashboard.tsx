@@ -17,9 +17,6 @@ const Dashboard:React.FC = () => {
             <Appbar
                 iconTitle={Home}
                 title='Dashboard'
-                firstName='Juan'
-                lastName='Dela Cruz'
-                role='Doctor'
                 icon={CircleUser}
             />
 

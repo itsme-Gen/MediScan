@@ -22,6 +22,14 @@ const dashboardProps:React.FC = () => {
         localStorage.removeItem("medicalHistory")
         navigate("/scanid")
     })
+
+    const toChatAssistant = (() =>{
+        localStorage.removeItem("saveFormData")
+        localStorage.removeItem("saveData")
+        localStorage.removeItem("saveImage")
+        localStorage.removeItem("medicalHistory")
+        navigate("/chatassistant")
+    })
     
   return (
     <div className='root-dashboard'>
@@ -54,7 +62,9 @@ const dashboardProps:React.FC = () => {
                         <span className='text-secondary text-md '>Record</span>
                     </li>
 
-                    <li className='flex flex-row gap-2 justify-start p-1 m-5'>
+                    <li className='flex flex-row gap-2 justify-start p-1 m-5'
+                        onClick={toChatAssistant}
+                    >
                         <Bot className='text-secondary w-5 h-5'/>
                         <span className='text-secondary text-md'>Assistant</span>
                     </li>
