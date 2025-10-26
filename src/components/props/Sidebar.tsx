@@ -1,5 +1,4 @@
-import Button from '@mui/material/Button'
-import { Bot, Home, Scan, Search, Stethoscope } from 'lucide-react'
+import { Bot, Home, Scan,  Stethoscope } from 'lucide-react'
 import React from 'react'
 import { NotepadText } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'

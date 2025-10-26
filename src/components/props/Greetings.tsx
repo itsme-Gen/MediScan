@@ -1,5 +1,4 @@
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { CircleUser } from "lucide-react";
 import React from "react";
 
 interface GreetingsProps {
@@ -33,21 +32,22 @@ const Greetings: React.FC<GreetingsProps> = ({ firstName, role }) => {
   };
 
   return (
-    <div className="greetings flex justify-center m-5">
-      <div className="greetings-card w-[95%] flex items-center gap-3 p-4 shadow rounded-lg bg-white">
-        <div className="animation_container">
-            <DotLottieReact
-                src="https://lottie.host/e2faa6a5-ef0d-4377-b246-e3d0a03c6a33/JzZ1X0PL4s.lottie"
-                loop
-                autoplay
-                height={100}
-                width={100}
-            />
+    <div className="greetings flex  px-3 sm:px-5 my-3 sm:my-5">
+      <div className="greetings-card w-full flex items-center gap-2 sm:gap-3 md:gap-4 p-3 sm:p-4 md:p-5 shadow-md rounded-lg bg-white">
+        <div className="animation_container flex-shrink-0">
+          <DotLottieReact
+            src="https://lottie.host/e2faa6a5-ef0d-4377-b246-e3d0a03c6a33/JzZ1X0PL4s.lottie"
+            loop
+            autoplay
+            className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28"
+          />
         </div>
       
-        <div className="greet-text">
-          <p className="text-sm text-gray-500">Welcome Back!</p>
-          <h3 className="text-lg font-semibold text-secondary">
+        <div className="greet-text min-w-0 flex-1">
+          <p className="text-xs sm:text-sm text-secondary mb-0.5 sm:mb-1">
+            Welcome Back!
+          </p>
+          <h3 className="text-base sm:text-lg md:text-xl font-semibold text-primary truncate">
             {greetFunction(role, firstName)}
           </h3>
         </div>
@@ -55,5 +55,4 @@ const Greetings: React.FC<GreetingsProps> = ({ firstName, role }) => {
     </div>
   );
 };
-
 export default Greetings;

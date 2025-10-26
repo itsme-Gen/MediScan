@@ -90,37 +90,38 @@ const SignUp: React.FC = () => {
   }
 
   return (
-    <div className='root-signup flex flex-row h-screen'>
+    <div className='root-signup flex flex-col lg:flex-row min-h-screen'>
       {/* Left: Animation + Welcome */}
-      <div className="welcome_text w-[50%] h-screen flex justify-center items-center flex-col gap-4 items-center">
-        <h1 className='text-4xl font-bold text-primary'>Create your Account</h1>
+      <div className="welcome_text w-full lg:w-[50%] min-h-[20vh] lg:min-h-screen flex justify-center items-center flex-col gap-4  lg:py-0 ">
+        <h1 className='text-2xl sm:text-3xl lg:text-4xl font-bold text-primary text-center'>Create your Account</h1>
         <p className='text-secondary text-md'></p>
 
-        <div className="animation_container">
+        <div className="animation_container hidden sm:block">
           <DotLottieReact
             src='https://lottie.host/a613f40c-8b33-43b5-8c33-48c45983a857/goVaQcXqY5.lottie'
             loop
             autoplay
-            height={400}  // kept original size
-            width={400}   // kept original size
+            height={300}
+            width={300}
+            className="sm:!h-[350px] sm:!w-[350px] lg:!h-[400px] lg:!w-[400px]"
           />
         </div>
       </div>
 
       {/* Right: Form */}
-      <div className="form_container w-[50%] h-full flex flex-col">
-        <form onSubmit={handleSubmit} className="form-signup w-full flex flex-col justify-center px-10">
+      <div className="form_container w-full lg:w-[50%] flex flex-col pb-8 lg:pb-0">
+        <form onSubmit={handleSubmit} className="form-signup w-full flex flex-col justify-center px-4 sm:px-6 lg:px-10">
 
           {step === 1 && (
             <>
               {/* Personal Information */}
-              <div className="personal_info_title text-center m-10">
-                <h1 className='text-2xl font-semibold text-primary border-b border-primary pb-4'>
+              <div className="personal_info_title text-center my-6 sm:my-8 lg:m-10">
+                <h1 className='text-xl sm:text-2xl font-semibold text-primary border-b border-primary pb-3 sm:pb-4'>
                   Personal Information
                 </h1>
               </div>
 
-              <div className="personal_information w-full grid grid-cols-2 gap-4">
+              <div className="personal_information w-full grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <TextField required type='text' label="First Name" name='firstName' value={formData.firstName} onChange={handleChange} variant='outlined' fullWidth />
                 <TextField required type='text' label="Middle Name" name='middleName' value={formData.middleName} onChange={handleChange} variant='outlined' fullWidth />
                 <TextField required type='text' label="Last Name" name='lastName' value={formData.lastName} onChange={handleChange} variant='outlined' fullWidth />
@@ -136,13 +137,13 @@ const SignUp: React.FC = () => {
 
               {/* Professional Info */}
               <div className="professional_info_container">
-                <div className="professional_info_title text-center m-10">
-                  <h1 className='text-2xl font-semibold text-primary border-b border-primary pb-4'>
+                <div className="professional_info_title text-center my-6 sm:my-8 lg:m-10">
+                  <h1 className='text-xl sm:text-2xl font-semibold text-primary border-b border-primary pb-3 sm:pb-4'>
                     Professional Information
                   </h1>
                 </div>
 
-                <div className="professional_information w-full grid grid-cols-2 gap-4">
+                <div className="professional_information w-full grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <FormControl sx={{ m: 0, minWidth: 80 }}>
                     <InputLabel id="role-label">Role</InputLabel>
                     <Select labelId="role-label" name='role' value={formData.role} onChange={handleChange} autoWidth label="Role">
@@ -157,9 +158,9 @@ const SignUp: React.FC = () => {
                   <TextField required type='number' name='hospitalId' value={formData.hospitalId} onChange={handleChange} label="Hospital/Employer ID" variant='outlined' fullWidth />
                 </div>
 
-                <div className="button_container align-center grid grid-cols-2 gap-4">
-                  <Button variant='outlined' className='!mt-4 mr-4' onClick={() => { navigate('/'); window.scrollTo(0, 0); }}>Back to Login</Button>
-                  <Button variant='contained' className='!bg-primary !mt-4' onClick={() => { if (validateStep1()) setStep(2); }}>Next</Button>
+                <div className="button_container grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-6">
+                  <Button variant='outlined' className='!w-full' onClick={() => { navigate('/'); window.scrollTo(0, 0); }}>Back to Login</Button>
+                  <Button variant='contained' className='!bg-primary !w-full' onClick={() => { if (validateStep1()) setStep(2); }}>Next</Button>
                 </div>
               </div>
             </>
@@ -169,12 +170,12 @@ const SignUp: React.FC = () => {
             <>
               {/* Contact Information */}
               <div className="contact_container">
-                <div className="contact_info_title text-center m-10">
-                  <h1 className='text-2xl font-semibold text-primary border-b border-primary pb-4'>
+                <div className="contact_info_title text-center my-6 sm:my-8 lg:m-10">
+                  <h1 className='text-xl sm:text-2xl font-semibold text-primary border-b border-primary pb-3 sm:pb-4'>
                     Contact Information
                   </h1>
                 </div>
-                <div className="contact_information w-full grid grid-cols-2 gap-4">
+                <div className="contact_information w-full grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <TextField required type='email' name='email' value={formData.email} onChange={handleChange} label="Personal Email" variant='outlined' fullWidth />
                   <TextField required type='number' label="Phone Number" name='phoneNumber' value={formData.phoneNumber} onChange={handleChange} variant='outlined' fullWidth />
                 </div>
@@ -182,12 +183,12 @@ const SignUp: React.FC = () => {
 
               {/* Security Information */}
               <div className="security_container">
-                <div className="security_info_title text-center m-10">
-                  <h1 className='text-2xl font-semibold text-primary border-b border-primary pb-4'>
+                <div className="security_info_title text-center my-6 sm:my-8 lg:m-10">
+                  <h1 className='text-xl sm:text-2xl font-semibold text-primary border-b border-primary pb-3 sm:pb-4'>
                     Security Information
                   </h1>
                 </div>
-                <div className="security_information w-full grid grid-cols-2 gap-4">
+                <div className="security_information w-full grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <TextField
                     required
                     type={showPassword ? "text" : "password"}
@@ -228,9 +229,9 @@ const SignUp: React.FC = () => {
                   />
                 </div>
 
-                <div className="button_container grid grid-cols-2 flex justify-center gap-4">
-                  <Button variant='outlined' className='!mt-4 mr-4' onClick={() => setStep(1)}>Previous</Button>
-                  <Button variant='contained' className='!mt-4 !bg-primary' type='submit'>Submit</Button>
+                <div className="button_container grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-6">
+                  <Button variant='outlined' className='!w-full' onClick={() => setStep(1)}>Previous</Button>
+                  <Button variant='contained' className='!bg-primary !w-full' type='submit'>Submit</Button>
                 </div>
               </div>
             </>
@@ -239,7 +240,6 @@ const SignUp: React.FC = () => {
         </form>
       </div>
 
-      {/* Hide Edge’s default password eye */}
       <style>{`input::-ms-reveal { display: none; }`}</style>
     </div>
   )

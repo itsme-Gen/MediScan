@@ -28,13 +28,11 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     }
   }, [navigate]);
 
-  // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle form submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -46,12 +44,15 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     try {
       const response = await loginUser(formData);
       if (response.status === 200) {
-        const { token, user:{id} } = response.data;
+        const {
+          token,
+          user: { id },
+        } = response.data;
 
         if (token) {
           localStorage.setItem("authToken", token);
           localStorage.setItem("userEmail", formData.email);
-          localStorage.setItem("userId",id)
+          localStorage.setItem("userId", id);
 
           onLogin();
           navigate("/dashboard");
@@ -85,14 +86,17 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="root-div h-screen flex flex-row justify-between m-5 items-center">
+    <div className="root-div h-screen flex flex-col md:flex-row justify-center md:justify-between items-center m-5 md:m-10">
       {/* Left Side: Form */}
-      <div className="form-container shadow-2xl shadow-black-400 rounded-lg flex flex-cols justify-center items-center mx-10 w-[40%]">
-        <form onSubmit={handleSubmit} className="sign_in flex flex-col gap-2 w-full px-15 py-10">
+      <div className="form-container shadow-2xl shadow-black-400 rounded-lg flex flex-col justify-center items-center w-full md:w-[40%] px-6 py-8 md:mx-10 h-full md:h-auto">
+        <form
+          onSubmit={handleSubmit}
+          className="sign_in flex flex-col gap-3 w-full max-w-md"
+        >
           <div className="logo flex flex-col items-center mb-4">
-            <Stethoscope className="bg-primary text-white rounded-xl h-15 w-15 p-3" />
+            <Stethoscope className="bg-primary text-white rounded-xl h-14 w-14 p-3" />
             <h1 className="text-3xl text-primary font-semibold">MediScan</h1>
-            <h2 className="text-sm text-secondary mb-8">
+            <h2 className="text-sm text-secondary mb-8 text-center">
               Medical Record Verification System
             </h2>
           </div>
@@ -124,7 +128,11 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 <Button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  style={{ textTransform: "none", minWidth: "auto", padding: "0 8px" }}
+                  style={{
+                    textTransform: "none",
+                    minWidth: "auto",
+                    padding: "0 8px",
+                  }}
                 >
                   {showPassword ? "Hide" : "Show"}
                 </Button>
@@ -132,11 +140,16 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             }}
           />
 
-          <Button variant="contained" fullWidth className="!bg-primary !mt-4" type="submit">
+          <Button
+            variant="contained"
+            fullWidth
+            className="!bg-primary !mt-4"
+            type="submit"
+          >
             Sign In
           </Button>
 
-          <div className="create_account flex justify-center mt-3">
+          <div className="create_account flex justify-center mt-3 flex-wrap text-center">
             <p className="text-secondary text-sm">Don't have an account?</p>
             <p
               className="text-primary text-sm ml-2 cursor-pointer font-semibold"
@@ -151,8 +164,8 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         </form>
       </div>
 
-      {/* Right Side: Animation */}
-      <div className="right-side flex items-center justify-center">
+      {/* Right Side: Animation (hidden on mobile) */}
+      <div className="right-side hidden md:flex items-center justify-center w-full md:w-[50%] mt-8 md:mt-0">
         <div className="animation">
           <DotLottieReact
             src="https://lottie.host/30123d7c-c25e-48a9-8b21-9fb0d355f476/deyQO8P1XK.lottie"

@@ -4,12 +4,11 @@ import { Settings, User, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-
 interface AppbarProps {
   title: string;
   icon: React.ElementType;
   iconTitle: React.ElementType;
-  onLogout?: () => void; 
+  onLogout?: () => void;
 }
 
 const Appbar: React.FC<AppbarProps> = ({
@@ -22,6 +21,28 @@ const Appbar: React.FC<AppbarProps> = ({
   const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [role, setRole] = useState("");
+
+  //Fetch user info
+  useEffect(() => {
+    const displayName = async () => {
+      const id = localStorage.getItem("userId");
+      try {
+        const response = await fetchUser(id!);
+        setFirstName(response.data.user.firstName);
+        setLastName(response.data.user.lastName);
+        setRole(response.data.user.role);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    displayName();
+  }, []);
+
+  //Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -32,58 +53,29 @@ const Appbar: React.FC<AppbarProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [role, setRole] = useState("");
-
-  const displayName = async () => {
-    const id = localStorage.getItem("userId");
-
-    try {
-      const response = await fetchUser(id!);
-      console.log("This is the response:", response.data);
-
-      setFirstName(response.data.user.firstName);
-      setLastName(response.data.user.lastName);
-      setRole(response.data.user.role);
-
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  displayName();
-
-  // Handle logout click
+  //Logout handler
   const handleLogout = () => {
-    
     localStorage.removeItem("authToken");
     localStorage.removeItem("userEmail");
-    toast.success("Log out successfull")
+    toast.success("Logged out successfully");
 
-    if (onLogout) {
-      onLogout();
-    }
+    if (onLogout) onLogout();
 
-    // Redirect to login page
     navigate("/login");
-
-    // Close menu
     setMenuOpen(false);
   };
 
   return (
     <header className="fixed-top flex justify-center m-5 z-50">
       <nav className="flex items-center h-15 w-[95%] shadow shadow-gray-black rounded-xl p-8 bg-white relative">
-        {/* Left Section - Title */}
+        {/* LEFT SECTION */}
         <div className="flex flex-row gap-2 items-center">
           <IconTitle className="text-primary" />
           <h1 className="text-lg font-semibold text-primary">{title}</h1>
         </div>
 
-        {/* Right Section - Menu */}
+        {/* RIGHT SECTION */}
         <div className="flex items-center ml-auto relative" ref={menuRef}>
-          {/* User Icon Button */}
           <button
             onClick={() => setMenuOpen((prev) => !prev)}
             className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 transition"
@@ -91,7 +83,6 @@ const Appbar: React.FC<AppbarProps> = ({
             <Icon className="text-primary" />
           </button>
 
-          {/* Dropdown Menu */}
           {menuOpen && (
             <div
               className="absolute right-0 mt-2 bg-white shadow-lg rounded-lg w-48 py-2 border border-gray-200 z-50 animate-fade-in"
@@ -104,7 +95,6 @@ const Appbar: React.FC<AppbarProps> = ({
                 <Settings className="w-4 h-4 mr-2 text-primary" /> Settings
               </button>
               <hr className="my-1" />
-              {/* Logout Button */}
               <button
                 onClick={handleLogout}
                 className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
@@ -115,8 +105,8 @@ const Appbar: React.FC<AppbarProps> = ({
           )}
         </div>
 
-        {/* User Info */}
-        <div className="containers flex flex-col ml-3">
+        {/* USER INFO */}
+        <div className="containers hidden sm:flex flex-col ml-3">
           <div className="info flex flex-row">
             <h2 className="text-sm font-semibold text-secondary mr-1">
               {firstName}
