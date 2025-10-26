@@ -53,10 +53,6 @@ const dashboardProps:React.FC = () => {
                         <Scan className='text-secondary w-5 h-5'/>
                         <span className='text-secondary text-md'>Scan ID</span>
                     </li>
-                    <li className='flex flex-row gap-2 justify-start  p-1 m-5'>
-                        <Search className='text-secondary w-5 h-5'/>
-                        <span className='text-secondary text-md'>Search</span>
-                    </li>
                     <li className='flex flex-row gap-2 justify-start i p-1 m-5'>
                         <NotepadText className='text-secondary w-5 h-5'/>
                         <span className='text-secondary text-md '>Record</span>

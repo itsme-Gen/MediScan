@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Home, Settings, User, LogOut } from "lucide-react";
+import { fetchUser } from "../api/fetchUser";
+import { Settings, User, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios";
+
 
 interface AppbarProps {
   title: string;
@@ -39,7 +40,7 @@ const Appbar: React.FC<AppbarProps> = ({
     const id = localStorage.getItem("userId");
 
     try {
-      const response = await axios.get(`http://localhost:9000/employee/${id}`);
+      const response = await fetchUser(id!);
       console.log("This is the response:", response.data);
 
       setFirstName(response.data.user.firstName);

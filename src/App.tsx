@@ -22,7 +22,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 const App: React.FC = () => {
   const [isLoggedIn, setLoggedIn] = useState(false);
 
-  // Check if user already logged in (on refresh)
+  // Check if user already logged in
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (token) {
@@ -30,11 +30,7 @@ const App: React.FC = () => {
     }
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("userEmail");
-    setLoggedIn(false);
-  };
+
 
   return (
     <div className="App">
@@ -124,8 +120,8 @@ const App: React.FC = () => {
 
       <ToastContainer
         position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
+        autoClose={1000}
+        hideProgressBar={true}
         newestOnTop
         closeOnClick
         pauseOnHover

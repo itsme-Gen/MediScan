@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
+import type { LoginForm } from "../Models/LoginForm";
+import { loginUser } from "../api/login";
 import Button from "@mui/material/Button";
 import { Stethoscope } from "lucide-react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
 
 interface LoginProps {
@@ -12,7 +13,7 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<LoginForm>({
     email: "",
     password: "",
   });
@@ -20,7 +21,6 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
   const navigate = useNavigate();
 
-  // Check token on mount
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (token) {
@@ -44,8 +44,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     }
 
     try {
-      const response = await axios.post("http://localhost:8000/signin", formData);
-
+      const response = await loginUser(formData);
       if (response.status === 200) {
         const { token, user:{id} } = response.data;
 

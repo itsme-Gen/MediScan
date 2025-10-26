@@ -5,7 +5,7 @@ import {
     Phone, Pill, Save, Stethoscope, User, UserPlus
 } from 'lucide-react'
 import Sidebar from '../props/Sidebar'
-import axios from 'axios'
+import { registerPatient } from '../api/registePatient'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 
@@ -145,7 +145,7 @@ const AddtoRecords = () => {
         };
 
         try {
-            const response = await axios.post("http://localhost:8080/registerpatient", saveData);
+            const response = await registerPatient(saveData);
             console.log("Response:", response.data);
 
             localStorage.removeItem("saveFormData")

@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import TextField from '@mui/material/TextField'
+import type { RegisterForm } from '../Models/registerForm';
+import {registerUser} from '../api/register';
 import { DotLottieReact } from "@lottiefiles/dotlottie-react"
 import type { SelectChangeEvent } from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
@@ -7,13 +9,12 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
-import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate()
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RegisterForm>({
     firstName: "",
     middleName: "",
     lastName: "",
@@ -30,7 +31,6 @@ const SignUp: React.FC = () => {
 
   const [step, setStep] = useState<number>(1);
 
-  // Track password visibility
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
@@ -77,7 +77,7 @@ const SignUp: React.FC = () => {
     }
 
     try {
-      await axios.post("http://localhost:8000/register", formData);
+      await registerUser(formData);
       toast.success("Successfully Registered");
       navigate('/login');
     } catch (error) {

@@ -1,6 +1,5 @@
-import React from "react";
 
-// Updated dataset with general categories
+
 export const dataset = [
   { month: "Jan", accidents: 100, infectious: 200, chronic: 70, others: 500 },
   { month: "Feb", accidents: 120, infectious: 80, chronic: 70, others: 52 },
@@ -16,7 +15,7 @@ export const dataset = [
   { month: "Dec", accidents: 25, infectious: 25, chronic: 20, others: 20 },
 ];
 
-// Value formatter for patients
+
 export const valueFormatter = (value: number | null) => {
   if (value === null) return "-";
   if (value >= 1000) return (value / 1000).toFixed(1) + "k patients";

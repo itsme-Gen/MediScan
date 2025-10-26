@@ -1,8 +1,8 @@
 import React, { useState } from "react";
+import { sendMessage } from "../api/sentMessage";
 import Sidebar from "../props/Sidebar";
 import Appbar from "../props/Appbar";
 import { Bot, CircleUser} from "lucide-react";
-import axios from "axios";
 
 interface Message {
   sender: "user" | "bot";
@@ -23,7 +23,7 @@ const ChatAssistant: React.FC = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://127.0.0.1:5050/chat", { message: text });
+      const res = await sendMessage({message: text});
       const botReply = res.data.response;
       setMessages((prev) => [...prev, { sender: "bot", text: botReply }]);
     } catch (err) {
