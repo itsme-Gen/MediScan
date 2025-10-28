@@ -34,6 +34,7 @@ const Appbar: React.FC<AppbarProps> = ({
         setFirstName(response.data.user.firstName);
         setLastName(response.data.user.lastName);
         setRole(response.data.user.role);
+        localStorage.setItem("displayName", JSON.stringify(response.data.user));
       } catch (error) {
         console.error("Error fetching user:", error);
       }

@@ -39,10 +39,7 @@ const Dashboard: React.FC = () => {
         />
 
         <div className="greetings px-4 sm:px-6 lg:px-10">
-          <Greetings
-            firstName='Juan'
-            role='Doctor'
-          />
+          <Greetings/>
         </div>
 
         {/* Cards section */}
