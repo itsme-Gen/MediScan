@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from "../props/Sidebar";
 import AppBar from '../props/Appbar';
+import { verify } from '../api/VerifyThePatient';
+import { getMedicalHistory } from '../api/getMedicalHistory';
 import {
   CircleUser, ScanText, SquarePen, User, IdCard, Calendar,
   RotateCcw, Search, VenusAndMars, Home, NotepadText, Bot, Scan
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
 
 const OCR = () => {
   const [isDisabled, setDisabled] = useState(true);
@@ -55,9 +56,7 @@ const OCR = () => {
 
   const searchRecords = async () => {
     try {
-      const response = await axios.post("http://localhost:9090/verify", {
-        idNumber: formData.idNumber,
-      });
+      const response = await verify(formData.idNumber)
 
       if (!response.data.success) {
         localStorage.setItem("saveFormData", JSON.stringify(formData));
@@ -67,8 +66,8 @@ const OCR = () => {
         navigate("/results");
 
         const patientId = response.data.patient._id;
-        const medicalHistory = await axios.get(`http://localhost:5000/medicalhistory/patients/${patientId}`);
-        localStorage.setItem("medicalHistory", JSON.stringify(medicalHistory.data));
+        const medicalHistory = await getMedicalHistory(patientId);
+        console.log("Medical History fetched:", medicalHistory.data);
       }
     } catch (error: any) {
       if (error.response && error.response.status === 500) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { fetchUser } from "../api/fetchUser";
+import { fetchUser } from "../api/displayUser";
 import { Settings, User, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";

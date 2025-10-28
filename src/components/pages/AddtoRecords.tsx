@@ -435,7 +435,7 @@ const AddtoRecords = () => {
                             </div>
 
                             {/* NEXT BUTTON */}
-                            <div className="button-container flex justify-center items-center my-8">
+                            <div className="button-container flex justify-center items-center my-8 mb-20">
                             <button
                                 className="bg-primary hover:bg-primary/90 transition-all duration-300 rounded px-6 py-2 text-white flex items-center gap-2 text-sm sm:text-base"
                                 onClick={(e) => {
@@ -919,7 +919,7 @@ const AddtoRecords = () => {
                             </div>
 
                             {/* BUTTONS */}
-                            <div className="button-container flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 items-center m-5">
+                            <div className="button-container flex flex-col sm:flex-row justify-center gap-4 sm:gap-6 items-center m-5 mb-20">
                             <button
                                 type="button"
                                 className="bg-gray-400 rounded px-6 py-2 text-white flex items-center gap-2 w-full sm:w-auto justify-center"

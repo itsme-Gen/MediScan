@@ -14,9 +14,10 @@ import {
 } from "lucide-react";
 import React, { useState } from "react";
 import Appbar from "../props/Appbar";
+import { classify } from "../api/classify";
+import { extract } from "../api/Ocr"
 import Sidebar from "../props/Sidebar";
 import { useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
 
 const ScanID = () => {
   const [image, setImage] = useState<string | null>(null);
@@ -65,13 +66,7 @@ const ScanID = () => {
 
     try {
       // Classify uploaded image
-      const classifyResponse = await axios.post(
-        "http://localhost:5050/classify",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const classifyResponse = await classify(formData)
 
       const { prediction } = classifyResponse.data;
       console.log("Classification Result:", prediction);
@@ -87,13 +82,7 @@ const ScanID = () => {
       setSuccessMessage("ID detected! Extracting information, please wait...");
 
       // Extract info
-      const ocrResponse = await axios.post(
-        "http://127.0.0.1:5000/extract-info",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const ocrResponse = await extract(formData)
 
       console.log("Extracted Info:", ocrResponse.data);
 
@@ -165,28 +154,40 @@ const ScanID = () => {
               )}
 
               <div className="button-container grid grid-cols-1 sm:grid-cols-2 mt-5 gap-3">
-                <input
-                  type="file"
-                  id="upload-image"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleFileChange}
-                />
+                  {/* Upload from file */}
+                  <input
+                    type="file"
+                    id="upload-image"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
 
-                <label
-                  htmlFor="upload-image"
-                  className="bg-primary flex flex-row text-white text-md rounded-md p-2 items-center justify-center gap-2 cursor-pointer hover:bg-blue-700 transition"
-                >
-                  <ImageUp className="h-5 w-5" /> Upload Image
-                </label>
+                  <label
+                    htmlFor="upload-image"
+                    className="bg-primary flex flex-row text-white text-md rounded-md p-2 items-center justify-center gap-2 cursor-pointer hover:bg-blue-700 transition"
+                  >
+                    <ImageUp className="h-5 w-5" /> Upload Image
+                  </label>
 
-                <button
-                  className="border border-gray-300 rounded-md p-2 text-md text-black flex flex-row justify-center items-center gap-2 hover:bg-gray-100 transition"
-                >
-                  <Camera className="h-5 w-5" />
-                  Take A Photo
-                </button>
-              </div>
+                  {/* Capture from camera */}
+                  <input
+                    type="file"
+                    id="capture-photo"
+                    accept="image/*"
+                    capture="environment"
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
+
+                  <label
+                    htmlFor="capture-photo"
+                    className="border border-gray-300 rounded-md p-2 text-md text-black flex flex-row justify-center items-center gap-2 hover:bg-gray-100 transition cursor-pointer"
+                  >
+                    <Camera className="h-5 w-5" />
+                    Take A Photo
+                  </label>
+                </div>
 
               {errorMessage && (
                 <div className="bg-red-100 text-red-700 p-3 mt-4 rounded-md text-center text-sm font-semibold">
