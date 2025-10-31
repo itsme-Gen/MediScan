@@ -15,7 +15,7 @@ import {
 import React, { useState } from "react";
 import Appbar from "../props/Appbar";
 import { classify } from "../api/classify";
-import { extract } from "../api/Ocr"
+import { extract } from "../api/Ocr";
 import Sidebar from "../props/Sidebar";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -28,7 +28,7 @@ const ScanID = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // clear storage and navigate
+  // Clear storage and navigate
   const clearStorageAndNavigate = (path: string) => {
     localStorage.removeItem("saveFormData");
     localStorage.removeItem("saveData");
@@ -66,8 +66,7 @@ const ScanID = () => {
 
     try {
       // Classify uploaded image
-      const classifyResponse = await classify(formData)
-
+      const classifyResponse = await classify(formData);
       const { prediction } = classifyResponse.data;
       console.log("Classification Result:", prediction);
 
@@ -82,8 +81,7 @@ const ScanID = () => {
       setSuccessMessage("ID detected! Extracting information, please wait...");
 
       // Extract info
-      const ocrResponse = await extract(formData)
-
+      const ocrResponse = await extract(formData);
       console.log("Extracted Info:", ocrResponse.data);
 
       if (ocrResponse.data.error) {
@@ -103,7 +101,7 @@ const ScanID = () => {
   };
 
   return (
-    <div className="scanId flex flex-col lg:flex-row h-screen">
+    <div className="scanId flex flex-col lg:flex-row min-h-screen">
       {/* Sidebar */}
       <div className="sidebar hidden lg:block">
         <Sidebar />
@@ -122,9 +120,9 @@ const ScanID = () => {
         </div>
 
         {/* Main Container */}
-        <div className="container grid grid-cols-1 lg:grid-cols-2 gap-6 px-4 sm:px-6 lg:px-10 py-10">
+        <div className="container grid grid-cols-1 lg:grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-6 px-4 sm:px-6 lg:px-10 py-10 items-start">
           {/* Upload Section */}
-          <div className="upload_image flex flex-col shadow-md rounded-lg p-5 bg-white">
+          <div className="upload_image h-full flex flex-col shadow-md rounded-lg p-10 bg-white">
             <div className="title">
               <div className="flex flex-row items-center gap-2">
                 <Camera />
@@ -154,40 +152,40 @@ const ScanID = () => {
               )}
 
               <div className="button-container grid grid-cols-1 sm:grid-cols-2 mt-5 gap-3">
-                  {/* Upload from file */}
-                  <input
-                    type="file"
-                    id="upload-image"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleFileChange}
-                  />
+                {/* Upload from file */}
+                <input
+                  type="file"
+                  id="upload-image"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
 
-                  <label
-                    htmlFor="upload-image"
-                    className="bg-primary flex flex-row text-white text-md rounded-md p-2 items-center justify-center gap-2 cursor-pointer hover:bg-blue-700 transition"
-                  >
-                    <ImageUp className="h-5 w-5" /> Upload Image
-                  </label>
+                <label
+                  htmlFor="upload-image"
+                  className="bg-primary flex flex-row text-white text-md rounded-md p-2 items-center justify-center gap-2 cursor-pointer hover:bg-blue-700 transition"
+                >
+                  <ImageUp className="h-5 w-5" /> Upload Image
+                </label>
 
-                  {/* Capture from camera */}
-                  <input
-                    type="file"
-                    id="capture-photo"
-                    accept="image/*"
-                    capture="environment"
-                    className="hidden"
-                    onChange={handleFileChange}
-                  />
+                {/* Capture from camera */}
+                <input
+                  type="file"
+                  id="capture-photo"
+                  accept="image/*"
+                  capture="environment"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
 
-                  <label
-                    htmlFor="capture-photo"
-                    className="border border-gray-300 rounded-md p-2 text-md text-black flex flex-row justify-center items-center gap-2 hover:bg-gray-100 transition cursor-pointer"
-                  >
-                    <Camera className="h-5 w-5" />
-                    Take A Photo
-                  </label>
-                </div>
+                <label
+                  htmlFor="capture-photo"
+                  className="border border-gray-300 rounded-md p-2 text-md text-black flex flex-row justify-center items-center gap-2 hover:bg-gray-100 transition cursor-pointer"
+                >
+                  <Camera className="h-5 w-5" />
+                  Take A Photo
+                </label>
+              </div>
 
               {errorMessage && (
                 <div className="bg-red-100 text-red-700 p-3 mt-4 rounded-md text-center text-sm font-semibold">
@@ -204,7 +202,7 @@ const ScanID = () => {
           </div>
 
           {/* OCR Section */}
-          <div className="ocr-processing shadow-md rounded-lg p-5 bg-white mb-20">
+          <div className="ocr-processing h-full shadow-md rounded-lg p-5 bg-white self-stretch mb-20">
             <div className="title">
               <div className="flex flex-row items-center gap-2">
                 <Zap />

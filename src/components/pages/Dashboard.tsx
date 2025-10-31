@@ -74,7 +74,7 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Bar graph */}
-        <div className="bar_graph_container w-full flex justify-center mt-6 sm:mt-8 lg:mt-10 mb-6">
+        <div className="bar_graph_container w-full flex justify-center mt-6 sm:mt-8 mb-25 lg:mt-10 mb-6">
           <div className="bar_graph w-full bg-[#f4f4f4] mx-4 sm:mx-6 lg:mx-10 p-4 sm:p-6 rounded-lg">
             <BarGraph/>
           </div>
