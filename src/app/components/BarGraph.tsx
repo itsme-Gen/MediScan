@@ -6,25 +6,25 @@ const BarGraph = () => {
   const chartSetting = {
     xAxis: [
       {
-        label: 'Number of Patients',
+        label: 'Patients per week',
         min: 0,
-        max: 1000,
+        max: 400,
       },
     ],
-    height: 500,
-    margin: { left: 0},
+    height: 360,
+    margin: { left: 0, right: 20, top: 20, bottom: 40 },
   };
 
   return (
     <div className='barProps'>
       <BarChart
         dataset={dataset}
-        yAxis={[{ scaleType: 'band', dataKey: 'month' }]}
+        yAxis={[{ scaleType: 'band', dataKey: 'week' }]}
         series={[
-          { dataKey: 'accidents', label: 'Accidents', stack: 'total', color: '#1C6EA4', valueFormatter },
-          { dataKey: 'infectious', label: 'Infectious Diseases', stack: 'total', color: '#33A1E0', valueFormatter },
-          { dataKey: 'chronic', label: 'Chronic Illnesses', stack: 'total', color: '#92FE9D', valueFormatter },
-          { dataKey: 'others', label: 'Other Cases', stack: 'total', color: '#FF6B6B', valueFormatter },
+          { dataKey: 'clinic', label: 'Clinic', stack: 'total', color: '#2563eb', valueFormatter },
+          { dataKey: 'er', label: 'ER', stack: 'total', color: '#ea580c', valueFormatter },
+          { dataKey: 'tele', label: 'Telehealth', stack: 'total', color: '#14b8a6', valueFormatter },
+          { dataKey: 'followup', label: 'Follow-up', stack: 'total', color: '#6366f1', valueFormatter },
         ]}
         layout="horizontal"
         {...chartSetting}

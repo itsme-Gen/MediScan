@@ -1,23 +1,18 @@
 
 
 export const dataset = [
-  { month: "Jan", accidents: 100, infectious: 200, chronic: 70, others: 500 },
-  { month: "Feb", accidents: 120, infectious: 80, chronic: 70, others: 52 },
-  { month: "Mar", accidents: 800, infectious: 600, chronic: 502, others: 400 },
-  { month: "Apr", accidents: 20, infectious: 15, chronic: 10, others: 15 },
-  { month: "May", accidents: 30, infectious: 25, chronic: 20, others: 15 },
-  { month: "June", accidents: 10, infectious: 5, chronic: 8, others: 7 },
-  { month: "July", accidents: 900, infectious: 800, chronic: 450, others: 200 },
-  { month: "Aug", accidents: 1100, infectious: 900, chronic: 800, others: 323 },
-  { month: "Sep", accidents: 20, infectious: 15, chronic: 15, others: 10 },
-  { month: "Oct", accidents: 30, infectious: 25, chronic: 20, others: 15 },
-  { month: "Nov", accidents: 30, infectious: 30, chronic: 20, others: 10 },
-  { month: "Dec", accidents: 25, infectious: 25, chronic: 20, others: 20 },
+  { week: "W1", er: 62, clinic: 88, tele: 54, followup: 32 },
+  { week: "W2", er: 74, clinic: 92, tele: 58, followup: 36 },
+  { week: "W3", er: 68, clinic: 105, tele: 64, followup: 40 },
+  { week: "W4", er: 81, clinic: 110, tele: 70, followup: 44 },
+  { week: "W5", er: 77, clinic: 120, tele: 74, followup: 46 },
+  { week: "W6", er: 69, clinic: 114, tele: 66, followup: 38 },
+  { week: "W7", er: 92, clinic: 130, tele: 78, followup: 52 },
+  { week: "W8", er: 88, clinic: 138, tele: 84, followup: 55 },
 ];
 
 
 export const valueFormatter = (value: number | null) => {
   if (value === null) return "-";
-  if (value >= 1000) return (value / 1000).toFixed(1) + "k patients";
-  return value + " patients";
+  return value + " pts";
 };
