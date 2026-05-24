@@ -1,4 +1,8 @@
-# React + TypeScript + Vite
+![Medi-Scan Logo](./thumbnail.png)
+
+# Medi-Scan 2.0
+
+A medical scanning and records management application built with React, TypeScript, and Vite.
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
