@@ -49,7 +49,6 @@ export type Prescription = {
   quantity: string;
   frequency: string;
   datePrescribed: string;
-  prescribeBy: string;
 };
 
 // Basic identity details captured from ID/OCR flows

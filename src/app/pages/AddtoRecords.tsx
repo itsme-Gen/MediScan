@@ -146,7 +146,7 @@ const AddtoRecords = () => {
     { testName: '', testDate: '', testResult: '', referenceRange: '', testFlag: '' },
   ]);
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([
-    { medicationName: '', dosage: '', quantity: '', frequency: '', datePrescribed: '', prescribeBy: '' },
+    { medicationName: '', dosage: '', quantity: '', frequency: '', datePrescribed: '' },
   ]);
 
   const handleContactChange = (updates: Partial<ContactInfo>) => setContact((prev) => ({ ...prev, ...updates }));
@@ -160,6 +160,30 @@ const AddtoRecords = () => {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Get logged-in user info from localStorage
+    const userId = localStorage.getItem('userId');
+    const userName = localStorage.getItem('userName');
+    const userRole = localStorage.getItem('userRole');
+    const userDepartment = localStorage.getItem('userDepartment');
+    
+    // Also try to get from userData object as backup
+    const userDataStr = localStorage.getItem('userData');
+    let userDataObj = null;
+    if (userDataStr) {
+      try {
+        userDataObj = JSON.parse(userDataStr);
+      } catch (e) {
+        console.error('Failed to parse userData:', e);
+      }
+    }
+
+    console.log('User Info from localStorage:');
+    console.log('  userId:', userId);
+    console.log('  userName:', userName);
+    console.log('  userRole:', userRole);
+    console.log('  userDepartment:', userDepartment);
+    console.log('  userData object:', userDataObj);
 
     const saveData = {
       patient: {
@@ -213,10 +237,18 @@ const AddtoRecords = () => {
         dosage: p.dosage,
         quantity: p.quantity,
         date_prescribed: p.datePrescribed,
-        prescribing_provider: p.prescribeBy,
+        prescribing_provider: userName || 'Unknown',
+        prescribing_provider_id: userId,
         frequency: p.frequency,
       })),
+      // Add doctor/nurse information
+      doctorId: userId,
+      doctorName: userName,
+      doctorRole: userRole,
+      department: userDepartment,
     };
+
+    console.log('Save Data being sent:', saveData);
 
     try {
       const response = await registerPatient(saveData);
@@ -240,7 +272,7 @@ const AddtoRecords = () => {
       setAllergies([{ allergyName: '', allergyType: '', allergyReaction: '', severity: '' }]);
       setLabResults([{ testName: '', testDate: '', testResult: '', referenceRange: '', testFlag: '' }]);
       setPrescriptions([
-        { medicationName: '', dosage: '', quantity: '', frequency: '', datePrescribed: '', prescribeBy: '' },
+        { medicationName: '', dosage: '', quantity: '', frequency: '', datePrescribed: '' },
       ]);
       setStep(1);
     } catch (error) {

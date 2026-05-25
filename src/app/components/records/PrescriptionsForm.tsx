@@ -30,7 +30,6 @@ const PrescriptionsForm: React.FC<Props> = ({ prescriptions, onChange, onAdd, on
             { id: 'quantity', label: 'Quantity', type: 'text' },
             { id: 'frequency', label: 'Frequency', type: 'text' },
             { id: 'datePrescribed', label: 'Date Prescribed', type: 'date' },
-            { id: 'prescribeBy', label: 'Prescribed By', type: 'text' },
           ].map((field) => (
             <div className="flex flex-col" key={field.id}>
               <label

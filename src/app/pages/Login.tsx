@@ -46,13 +46,26 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       if (response.status === 200) {
         const {
           token,
-          user: { id },
+          user,
         } = response.data;
 
         if (token) {
+          // Store user information for later use
           localStorage.setItem("authToken", token);
           localStorage.setItem("userEmail", formData.email);
-          localStorage.setItem("userId", id);
+          localStorage.setItem("userId", user.id);
+          localStorage.setItem("userName", `${user.firstName} ${user.lastName}`);
+          localStorage.setItem("userRole", user.role);
+          localStorage.setItem("userDepartment", user.department);
+          localStorage.setItem("userData", JSON.stringify(user));
+
+          // Log what was stored
+          console.log('User logged in and stored in localStorage:');
+          console.log('  userId:', user.id);
+          console.log('  userName:', `${user.firstName} ${user.lastName}`);
+          console.log('  userRole:', user.role);
+          console.log('  userDepartment:', user.department);
+          console.log('  Full user object:', user);
 
           onLogin();
           navigate("/dashboard");
