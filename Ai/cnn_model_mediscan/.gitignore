@@ -1,0 +1,44 @@
+# Virtual environments
+venv/
+.venv/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Model weights and datasets
+*.h5
+*.pkl
+*.joblib
+
+# Images
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.avif
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment
+.env
+.env.local
+
+# Build and distribution
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+
+# Logs
+*.log

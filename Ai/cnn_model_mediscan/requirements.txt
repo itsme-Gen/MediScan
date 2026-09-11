@@ -1,0 +1,9 @@
+flask  #Web framework
+flask-cors  #Handle cross-origin requests from React
+tensorflow #Deep learning framework
+scipy  #Scientific computing (you encountered this error)
+Pillow  #Image processing
+numpy  #Numerical operations
+h5py  #Loading .weights.h5 files
+gunicorn 
+matplotlib
